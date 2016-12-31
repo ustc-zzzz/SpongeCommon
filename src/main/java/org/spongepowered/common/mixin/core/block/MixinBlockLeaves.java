@@ -40,7 +40,6 @@ import org.spongepowered.api.data.manipulator.immutable.block.ImmutableTreeData;
 import org.spongepowered.api.data.type.TreeType;
 import org.spongepowered.api.data.type.TreeTypes;
 import org.spongepowered.api.data.value.BaseValue;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.util.annotation.NonnullByDefault;
 import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.api.world.Location;
@@ -60,8 +59,8 @@ import org.spongepowered.common.event.tracking.CauseTracker;
 import org.spongepowered.common.event.tracking.IPhaseState;
 import org.spongepowered.common.event.tracking.PhaseContext;
 import org.spongepowered.common.event.tracking.PhaseData;
-import org.spongepowered.common.event.tracking.phase.block.BlockPhase;
 import org.spongepowered.common.event.tracking.phase.TrackingPhases;
+import org.spongepowered.common.event.tracking.phase.block.BlockPhase;
 import org.spongepowered.common.interfaces.world.IMixinWorldServer;
 
 import java.util.List;
@@ -89,7 +88,7 @@ public abstract class MixinBlockLeaves extends MixinBlock {
                     .state((BlockState) state)
                     .build();
             causeTracker.switchToPhase(BlockPhase.State.BLOCK_DECAY, PhaseContext.start()
-                    .add(NamedCause.source(locatable))
+                    .source(locatable)
                     .addCaptures()
                     .complete());
         }
@@ -129,7 +128,7 @@ public abstract class MixinBlockLeaves extends MixinBlock {
                         .state((BlockState) state)
                         .build();
                 causeTracker.switchToPhase(BlockPhase.State.BLOCK_DECAY, PhaseContext.start()
-                        .add(NamedCause.source(locatable))
+                        .source(locatable)
                         .addCaptures()
                         .complete());
             }

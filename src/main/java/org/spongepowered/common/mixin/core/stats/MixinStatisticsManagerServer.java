@@ -32,7 +32,6 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.achievement.GrantAchievementEvent;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.message.MessageEvent;
 import org.spongepowered.api.statistic.achievement.Achievement;
 import org.spongepowered.api.text.Text;
@@ -63,13 +62,15 @@ public abstract class MixinStatisticsManagerServer {
             TRANSLATION_ID, player.getDisplayName(), stat.createChatComponent()));
 
         // TODO: Better cause here?
+        Sponge.getCauseStackManager().pushCause(player);
         GrantAchievementEvent event = SpongeEventFactory.createGrantAchievementEventTargetPlayer(
-            Cause.source(player).build(), channel, Optional.of(channel), achievement,
+                Sponge.getCauseStackManager().getCurrentCause(), channel, Optional.of(channel), achievement,
             new MessageEvent.MessageFormatter(message), (Player) player, false);
 
         if (Sponge.getEventManager().post(event)) {
             ci.cancel();
         }
+        Sponge.getCauseStackManager().popCause();
     }
 
 }

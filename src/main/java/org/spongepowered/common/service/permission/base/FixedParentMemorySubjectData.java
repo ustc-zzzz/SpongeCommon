@@ -26,7 +26,7 @@ package org.spongepowered.common.service.permission.base;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
-import org.spongepowered.api.service.context.Context;
+import org.spongepowered.api.service.context.ServiceContext;
 import org.spongepowered.api.service.permission.PermissionService;
 import org.spongepowered.api.service.permission.Subject;
 
@@ -50,12 +50,12 @@ public class FixedParentMemorySubjectData extends GlobalMemorySubjectData {
     }
 
     @Override
-    public List<Subject> getParents(Set<Context> contexts) {
+    public List<Subject> getParents(Set<ServiceContext> contexts) {
         return ImmutableList.<Subject>builder().add(this.forcedParent).addAll(super.getParents(contexts)).build();
     }
 
     @Override
-    public boolean addParent(Set<Context> contexts, Subject parent) {
+    public boolean addParent(Set<ServiceContext> contexts, Subject parent) {
         if (Objects.equal(this.forcedParent, parent) && GLOBAL_CONTEXT.equals(contexts)) {
             return true;
         }
@@ -63,7 +63,7 @@ public class FixedParentMemorySubjectData extends GlobalMemorySubjectData {
     }
 
     @Override
-    public boolean removeParent(Set<Context> contexts, Subject parent) {
+    public boolean removeParent(Set<ServiceContext> contexts, Subject parent) {
         if (Objects.equal(this.forcedParent, parent)) {
             return false;
         }

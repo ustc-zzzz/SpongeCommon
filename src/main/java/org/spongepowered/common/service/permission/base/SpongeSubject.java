@@ -24,7 +24,7 @@
  */
 package org.spongepowered.common.service.permission.base;
 
-import org.spongepowered.api.service.context.Context;
+import org.spongepowered.api.service.context.ServiceContext;
 import org.spongepowered.api.service.permission.MemorySubjectData;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.service.permission.SubjectData;
@@ -45,12 +45,12 @@ public abstract class SpongeSubject implements Subject {
     public abstract MemorySubjectData getSubjectData();
 
     @Override
-    public boolean hasPermission(Set<Context> contexts, String permission) {
+    public boolean hasPermission(Set<ServiceContext> contexts, String permission) {
         return getPermissionValue(contexts, permission) == Tristate.TRUE;
     }
 
     @Override
-    public Tristate getPermissionValue(Set<Context> contexts, String permission) {
+    public Tristate getPermissionValue(Set<ServiceContext> contexts, String permission) {
         return getDataPermissionValue(getSubjectData(), permission);
     }
 
@@ -70,12 +70,12 @@ public abstract class SpongeSubject implements Subject {
     }
 
     @Override
-    public boolean isChildOf(Set<Context> contexts, Subject parent) {
+    public boolean isChildOf(Set<ServiceContext> contexts, Subject parent) {
         return getSubjectData().getParents(contexts).contains(parent);
     }
 
     @Override
-    public List<Subject> getParents(Set<Context> contexts) {
+    public List<Subject> getParents(Set<ServiceContext> contexts) {
         return getSubjectData().getParents(contexts);
     }
 
@@ -95,12 +95,12 @@ public abstract class SpongeSubject implements Subject {
     }
 
     @Override
-    public Optional<String> getOption(Set<Context> contexts, String key) {
+    public Optional<String> getOption(Set<ServiceContext> contexts, String key) {
         return getDataOptionValue(getSubjectData(), key);
     }
 
     @Override
-    public Set<Context> getActiveContexts() {
+    public Set<ServiceContext> getActiveContexts() {
         return SubjectData.GLOBAL_CONTEXT;
     }
 }

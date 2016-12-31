@@ -65,8 +65,6 @@ import java.util.List;
 @Mixin(EntityLightningBolt.class)
 public abstract class MixinEntityLightningBolt extends MixinEntityWeatherEffect implements Lightning, IMixinEntityLightningBolt {
 
-    public Cause cause = Cause.source(this).build();
-
     private final List<Entity> struckEntities = Lists.newArrayList();
     private final List<Transaction<BlockSnapshot>> struckBlocks = Lists.newArrayList();
     private boolean effect = false;
@@ -131,7 +129,8 @@ public abstract class MixinEntityLightningBolt extends MixinEntityWeatherEffect 
             return;
         }
         World world = (World) this.world;
-        LightningEvent.Strike strike = SpongeEventFactory.createLightningEventStrike(this.cause, this.struckEntities, this.struckBlocks);
+        Sponge.getCauseStackManager().pushCause(this);
+        LightningEvent.Strike strike = SpongeEventFactory.createLightningEventStrike(Sponge.getCauseStackManager().getCurrentCause(), this.struckEntities, this.struckBlocks);
         Sponge.getEventManager().post(strike);
 
         if (!strike.isCancelled()) {
@@ -144,8 +143,9 @@ public abstract class MixinEntityLightningBolt extends MixinEntityWeatherEffect 
             for (Entity e : strike.getEntities()) {
                 ((net.minecraft.entity.Entity) e).onStruckByLightning((EntityLightningBolt) (Object) this);
             }
-            SpongeImpl.postEvent(SpongeEventFactory.createLightningEventPost(this.cause));
+            SpongeImpl.postEvent(SpongeEventFactory.createLightningEventPost(Sponge.getCauseStackManager().getCurrentCause()));
         }
+        Sponge.getCauseStackManager().popCause();
     }
 
     @Override
@@ -160,16 +160,6 @@ public abstract class MixinEntityLightningBolt extends MixinEntityWeatherEffect 
     public void writeToNbt(NBTTagCompound compound) {
         super.writeToNbt(compound);
         compound.setBoolean("effect", this.effect);
-    }
-
-    @Override
-    public Cause getCause() {
-        return this.cause;
-    }
-
-    @Override
-    public void setCause(Cause cause) {
-        this.cause = cause;
     }
 
     // Data delegated methods

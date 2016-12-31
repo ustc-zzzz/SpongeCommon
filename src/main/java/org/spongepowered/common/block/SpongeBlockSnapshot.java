@@ -181,11 +181,7 @@ public class SpongeBlockSnapshot implements BlockSnapshot {
         CauseTracker causeTracker = CauseTracker.getInstance();
         final IPhaseState currentState = causeTracker.getCurrentState();
         if (!currentState.tracksBlockRestores()) {
-            causeTracker.switchToPhase(BlockPhase.State.RESTORING_BLOCKS,
-                    PhaseContext.start()
-                            // unused, to be removed and re-located when phase context is cleaned up
-                            //.add(NamedCause.of(InternalNamedCauses.General.RESTORING_BLOCK, this))
-                            .complete());
+            causeTracker.switchToPhase(BlockPhase.State.RESTORING_BLOCKS, PhaseContext.start().complete());
         }
 
         BlockPos pos = VecHelper.toBlockPos(this.pos);
@@ -272,11 +268,10 @@ public class SpongeBlockSnapshot implements BlockSnapshot {
         Optional<T> optional = this.blockState.get(containerClass);
         if (optional.isPresent()) {
             return optional;
-        } else {
-            for (ImmutableDataManipulator<?, ?> dataManipulator : this.extraData) {
-                if (containerClass.isInstance(dataManipulator)) {
-                    return Optional.of(((T) dataManipulator));
-                }
+        }
+        for (ImmutableDataManipulator<?, ?> dataManipulator : this.extraData) {
+            if (containerClass.isInstance(dataManipulator)) {
+                return Optional.of(((T) dataManipulator));
             }
         }
         return Optional.empty();

@@ -36,7 +36,6 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.world.ChunkPreGenerationEvent;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
@@ -201,12 +200,12 @@ public class SpongeChunkPreGenerateTask implements ChunkPreGenerate, Consumer<Ta
 
     @Override
     public void cancel() {
-        if (!isCancelled) {
+        if (!this.isCancelled) {
             if (this.eventListener != null) {
                 Sponge.getEventManager().unregisterListeners(this.eventListener);
             }
             this.spongeTask.cancel();
-            isCancelled = true;
+            this.isCancelled = true;
         }
     }
 
@@ -439,11 +438,13 @@ public class SpongeChunkPreGenerateTask implements ChunkPreGenerate, Consumer<Ta
 
         @Override
         public ChunkPreGenerate start() {
-            checkNotNull(plugin, "owner cannot be null");
+            checkNotNull(this.plugin, "owner cannot be null");
             checkArgument(this.chunksPerTick > 0 || this.tickPercent > 0, "Must use at least one of \"chunks per tick\" or \"tick percent limit\"");
-
+            Sponge.getCauseStackManager().pushCause(this.plugin);
+            Cause cause = Sponge.getCauseStackManager().getCurrentCause();
+            Sponge.getCauseStackManager().popCause();
             return new SpongeChunkPreGenerateTask(this.plugin, this.world, this.center, this.diameter, this.chunksPerTick, this.tickPercent,
-                    this.tickInterval, Cause.of(NamedCause.owner(this.plugin)), this.eventListeners);
+                    this.tickInterval, cause, this.eventListeners);
         }
 
         @Override

@@ -24,7 +24,7 @@
  */
 package org.spongepowered.common.service.permission.base;
 
-import org.spongepowered.api.service.context.Context;
+import org.spongepowered.api.service.context.ServiceContext;
 import org.spongepowered.api.service.permission.PermissionService;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.common.service.permission.OpLevelCollection;
@@ -47,13 +47,13 @@ public class SingleParentMemorySubjectData extends GlobalMemorySubjectData {
     }
 
     @Override
-    public List<Subject> getParents(Set<Context> contexts) {
+    public List<Subject> getParents(Set<ServiceContext> contexts) {
         final Subject parent = getParent();
         return GLOBAL_CONTEXT.equals(contexts) && parent != null ? Collections.singletonList(parent) : Collections.<Subject>emptyList();
     }
 
     @Override
-    public boolean addParent(Set<Context> contexts, Subject parent) {
+    public boolean addParent(Set<ServiceContext> contexts, Subject parent) {
         if (!(parent instanceof OpLevelCollection.OpLevelSubject)) {
             return false;
         }
@@ -65,7 +65,7 @@ public class SingleParentMemorySubjectData extends GlobalMemorySubjectData {
     }
 
     @Override
-    public boolean removeParent(Set<Context> contexts, Subject parent) {
+    public boolean removeParent(Set<ServiceContext> contexts, Subject parent) {
         if (parent == this.parent) {
             return setParent(null);
         }
@@ -78,7 +78,7 @@ public class SingleParentMemorySubjectData extends GlobalMemorySubjectData {
     }
 
     @Override
-    public boolean clearParents(Set<Context> contexts) {
+    public boolean clearParents(Set<ServiceContext> contexts) {
         return GLOBAL_CONTEXT.equals(contexts) && clearParents();
     }
 

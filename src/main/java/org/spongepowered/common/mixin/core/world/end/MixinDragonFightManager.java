@@ -24,7 +24,6 @@
  */
 package org.spongepowered.common.mixin.core.world.end;
 
-import com.google.common.collect.Lists;
 import net.minecraft.block.state.pattern.BlockPattern;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -32,16 +31,14 @@ import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.WorldServerMulti;
 import net.minecraft.world.end.DragonFightManager;
 import net.minecraft.world.end.DragonSpawnManager;
 import org.apache.logging.log4j.Logger;
-import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.util.PrettyPrinter;
 import org.spongepowered.common.event.tracking.CauseTracker;
 import org.spongepowered.common.event.tracking.PhaseContext;
 import org.spongepowered.common.event.tracking.phase.world.dragon.DragonPhase;
@@ -142,7 +139,6 @@ public abstract class MixinDragonFightManager {
                 final CauseTracker causeTracker = CauseTracker.getInstance();
                 causeTracker.switchToPhase(DragonPhase.State.RESPAWN_DRAGON, PhaseContext.start()
                     .addCaptures()
-                    .add(NamedCause.of("RespawnState", this.respawnState))
                     .complete());
                 // Sponge End
                 this.respawnState.process(this.world, (DragonFightManager) (Object) this, this.crystals, this.respawnStateTicks++, this.exitPortalLocation);

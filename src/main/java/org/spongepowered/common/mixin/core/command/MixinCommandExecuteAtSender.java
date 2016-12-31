@@ -28,7 +28,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.source.ProxySource;
-import org.spongepowered.api.service.context.Context;
+import org.spongepowered.api.service.context.ServiceContext;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.service.permission.SubjectCollection;
 import org.spongepowered.api.service.permission.SubjectData;
@@ -100,7 +100,7 @@ public abstract class MixinCommandExecuteAtSender implements ProxySource, IMixin
     }
 
     @Override
-    public boolean hasPermission(Set<Context> contexts, String permission) {
+    public boolean hasPermission(Set<ServiceContext> contexts, String permission) {
         return getOriginalSource().hasPermission(contexts, permission);
     }
 
@@ -110,7 +110,7 @@ public abstract class MixinCommandExecuteAtSender implements ProxySource, IMixin
     }
 
     @Override
-    public Tristate getPermissionValue(Set<Context> contexts, String permission) {
+    public Tristate getPermissionValue(Set<ServiceContext> contexts, String permission) {
         return getOriginalSource().getPermissionValue(contexts, permission);
     }
 
@@ -120,7 +120,7 @@ public abstract class MixinCommandExecuteAtSender implements ProxySource, IMixin
     }
 
     @Override
-    public boolean isChildOf(Set<Context> contexts, Subject parent) {
+    public boolean isChildOf(Set<ServiceContext> contexts, Subject parent) {
         return getOriginalSource().isChildOf(contexts, parent);
     }
 
@@ -130,7 +130,7 @@ public abstract class MixinCommandExecuteAtSender implements ProxySource, IMixin
     }
 
     @Override
-    public List<Subject> getParents(Set<Context> contexts) {
+    public List<Subject> getParents(Set<ServiceContext> contexts) {
         return getOriginalSource().getParents(contexts);
     }
 
@@ -145,7 +145,7 @@ public abstract class MixinCommandExecuteAtSender implements ProxySource, IMixin
     }
 
     @Override
-    public Set<Context> getActiveContexts() {
+    public Set<ServiceContext> getActiveContexts() {
         return getOriginalSource().getActiveContexts();
     }
 

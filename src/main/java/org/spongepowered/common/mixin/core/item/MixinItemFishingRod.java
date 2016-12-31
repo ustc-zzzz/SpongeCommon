@@ -33,12 +33,11 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntitySnapshot;
 import org.spongepowered.api.entity.projectile.FishHook;
 import org.spongepowered.api.event.SpongeEventFactory;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -53,12 +52,14 @@ public abstract class MixinItemFishingRod extends Item {
         EntityFishHook fishHook = new EntityFishHook(world, player);
         EntitySnapshot fishHookSnapshot = ((Entity) fishHook).createSnapshot();
         // only fire event on server-side to avoid crash on client
+        Sponge.getCauseStackManager().pushCause(player);
         if (!player.world.isRemote
-            && SpongeImpl.postEvent(SpongeEventFactory.createFishingEventStart(Cause.of(NamedCause.source(player)),
+            && SpongeImpl.postEvent(SpongeEventFactory.createFishingEventStart(Sponge.getCauseStackManager().getCurrentCause(),
                 fishHookSnapshot, (FishHook) fishHook))) {
             player.fishEntity = null;
             callbackInfoReturnable.setReturnValue(new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand)));
         }
+        Sponge.getCauseStackManager().popCause();
     }
 
 }

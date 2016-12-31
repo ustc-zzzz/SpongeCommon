@@ -24,7 +24,7 @@
  */
 package org.spongepowered.common.service.permission.base;
 
-import org.spongepowered.api.service.context.Context;
+import org.spongepowered.api.service.context.ServiceContext;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.service.permission.SubjectCollection;
 import org.spongepowered.api.util.Tristate;
@@ -67,7 +67,7 @@ public abstract class SpongeSubjectCollection implements SubjectCollection {
     }
 
     @Override
-    public Map<Subject, Boolean> getAllWithPermission(Set<Context> contexts, String permission) {
+    public Map<Subject, Boolean> getAllWithPermission(Set<ServiceContext> contexts, String permission) {
         final Map<Subject, Boolean> ret = new HashMap<>();
         for (Subject subj : getAllSubjects()) {
             Tristate state = subj.getPermissionValue(contexts, permission);

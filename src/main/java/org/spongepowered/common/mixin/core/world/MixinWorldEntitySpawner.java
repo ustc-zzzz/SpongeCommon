@@ -36,16 +36,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.entity.ConstructEntityEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -113,8 +114,7 @@ public abstract class MixinWorldEntitySpawner {
         final Cause cause = Cause.of(NamedCause.source(worldServerIn));
         if (CauseTracker.ENABLED) {
             CauseTracker.getInstance().switchToPhase(GenerationPhase.State.WORLD_SPAWNER_SPAWNING, PhaseContext.start()
-                .add(NamedCause.source(worldServerIn))
-                .add(NamedCause.of(InternalNamedCauses.WorldGeneration.WORLD, worldServerIn))
+                .source(worldServer)
                 .addCaptures()
                 .complete());
         }
@@ -124,7 +124,7 @@ public abstract class MixinWorldEntitySpawner {
         final int mobSpawnRange = Math.min(((IMixinWorldServer) worldServerIn).getActiveConfig().getConfig().getWorld().getMobSpawnRange(),
                 SpongeImpl.getServer().getPlayerList().getViewDistance());
         // Vanilla uses a div count of 289 (17x17) which assumes the view distance is 8.
-        // Since we allow for custom ranges, we need to adjust the div count based on the 
+        // Since we allow for custom ranges, we need to adjust the div count based on the
         // mob spawn range set by server.
         final int MOB_SPAWN_COUNT_DIV = (2 * mobSpawnRange + 1)*(2 * mobSpawnRange + 1);
 
@@ -339,8 +339,7 @@ public abstract class MixinWorldEntitySpawner {
         if (CauseTracker.ENABLED) {
             CauseTracker.getInstance().switchToPhase(GenerationPhase.State.WORLD_SPAWNER_SPAWNING, PhaseContext.start()
                 .addCaptures()
-                .add(NamedCause.of(InternalNamedCauses.WorldGeneration.WORLD, worldServer))
-                .add(NamedCause.source(worldServer))
+                .source(worldServer)
                 .complete());
         }
     }
@@ -374,7 +373,6 @@ public abstract class MixinWorldEntitySpawner {
      * @param collection
      * @return
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
     @Redirect(method = "performWorldGenSpawning", at = @At(value = "INVOKE", target = WEIGHTED_RANDOM_GET))
     private static WeightedRandom.Item onGetRandom(Random random, List<Biome.SpawnListEntry> collection) {
         Biome.SpawnListEntry entry = WeightedRandom.getRandomItem(random, collection);
@@ -382,7 +380,6 @@ public abstract class MixinWorldEntitySpawner {
         return entry;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     private static void setEntityType(Class<? extends net.minecraft.entity.Entity> entityclass) {
         spawnerEntityType = EntityTypeRegistryModule.getInstance().getForClass(entityclass);
     }
@@ -394,8 +391,10 @@ public abstract class MixinWorldEntitySpawner {
         }
         Vector3d vector3d = new Vector3d(pos.getX(), pos.getY(), pos.getZ());
         Transform<org.spongepowered.api.world.World> transform = new Transform<>((org.spongepowered.api.world.World) world, vector3d);
-        ConstructEntityEvent.Pre event = SpongeEventFactory.createConstructEntityEventPre(Cause.of(NamedCause.source(world)), entityType, transform);
+        Sponge.getCauseStackManager().pushCause(world);
+        ConstructEntityEvent.Pre event = SpongeEventFactory.createConstructEntityEventPre(Sponge.getCauseStackManager().getCurrentCause(), entityType, transform);
         SpongeImpl.postEvent(event);
+        Sponge.getCauseStackManager().popCause();
         return !event.isCancelled();
     }
 }

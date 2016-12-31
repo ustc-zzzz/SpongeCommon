@@ -28,14 +28,12 @@ import com.flowpowered.math.vector.Vector3d;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.Unpooled;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SPacketChangeGameState;
 import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketDisconnect;
 import net.minecraft.network.play.server.SPacketEntityEffect;
@@ -77,11 +75,6 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.SpongeEventFactory;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.cause.entity.spawn.EntitySpawnCause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.message.MessageEvent;
@@ -94,7 +87,6 @@ import org.spongepowered.api.service.whitelist.WhitelistService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.util.annotation.NonnullByDefault;
-import org.spongepowered.api.world.Dimension;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.gamerule.DefaultGameRules;
@@ -117,11 +109,9 @@ import org.spongepowered.common.event.tracking.phase.PlayerPhase;
 import org.spongepowered.common.interfaces.IMixinPlayerList;
 import org.spongepowered.common.interfaces.IMixinServerScoreboard;
 import org.spongepowered.common.interfaces.entity.IMixinEntity;
-import org.spongepowered.common.interfaces.entity.player.IMixinEntityPlayer;
 import org.spongepowered.common.interfaces.entity.player.IMixinEntityPlayerMP;
 import org.spongepowered.common.interfaces.network.play.server.IMixinSPacketWorldBorder;
 import org.spongepowered.common.interfaces.world.IMixinWorldServer;
-import org.spongepowered.common.mixin.core.entity.player.MixinEntityPlayer;
 import org.spongepowered.common.service.ban.SpongeIPBanList;
 import org.spongepowered.common.service.ban.SpongeUserListBans;
 import org.spongepowered.common.service.permission.SpongePermissionService;
@@ -278,8 +268,9 @@ public abstract class MixinPlayerList implements IMixinPlayerList {
         Player player = (Player) playerIn;
         Transform<World> fromTransform = player.getTransform().setExtent((World) worldServer);
 
+        Sponge.getCauseStackManager().pushCause(player);
         ClientConnectionEvent.Login loginEvent = SpongeEventFactory.createClientConnectionEventLogin(
-                Cause.of(NamedCause.source(player)), fromTransform, fromTransform, (RemoteConnection) netManager,
+                Sponge.getCauseStackManager().getCurrentCause(), fromTransform, fromTransform, (RemoteConnection) netManager,
                 new MessageEvent.MessageFormatter(disconnectMessage), (org.spongepowered.api.profile.GameProfile) gameprofile, player, false
         );
 
@@ -288,9 +279,11 @@ public abstract class MixinPlayerList implements IMixinPlayerList {
         }
 
         if (SpongeImpl.postEvent(loginEvent)) {
+            Sponge.getCauseStackManager().popCause();
             disconnectClient(netManager, loginEvent.isMessageCancelled() ? Optional.empty() : Optional.of(loginEvent.getMessage()), gameprofile);
             return;
         }
+        Sponge.getCauseStackManager().popCause();
 
         // Sponge end
 
@@ -434,11 +427,13 @@ public abstract class MixinPlayerList implements IMixinPlayerList {
         // Fire PlayerJoinEvent
         Text originalMessage = SpongeTexts.toText(chatcomponenttranslation);
         MessageChannel originalChannel = player.getMessageChannel();
+        Sponge.getCauseStackManager().pushCause(player);
         final ClientConnectionEvent.Join event = SpongeEventFactory.createClientConnectionEventJoin(
-                Cause.of(NamedCause.source(player)), originalChannel, Optional.of(originalChannel),
+                Sponge.getCauseStackManager().getCurrentCause(), originalChannel, Optional.of(originalChannel),
                 new MessageEvent.MessageFormatter(originalMessage), player, false
         );
         SpongeImpl.postEvent(event);
+        Sponge.getCauseStackManager().popCause();
         // Send to the channel
         if (!event.isMessageCancelled()) {
             event.getChannel().ifPresent(channel -> channel.send(player, event.getMessage()));
@@ -548,10 +543,12 @@ public abstract class MixinPlayerList implements IMixinPlayerList {
         toTransform = toTransform.setLocation(location);
 
         // ### PHASE 4 ### Fire event and set new location on the player
-        final RespawnPlayerEvent event = SpongeEventFactory.createRespawnPlayerEvent(Cause.of(NamedCause.source(newPlayer)), fromTransform,
+        Sponge.getCauseStackManager().pushCause(newPlayer);
+        final RespawnPlayerEvent event = SpongeEventFactory.createRespawnPlayerEvent(Sponge.getCauseStackManager().getCurrentCause(), fromTransform,
                 toTransform, (Player) playerIn, (Player) newPlayer, EntityUtil.tempIsBedSpawn, !conqueredEnd);
         EntityUtil.tempIsBedSpawn = false;
         SpongeImpl.postEvent(event);
+        Sponge.getCauseStackManager().popCause();
         ((IMixinEntity) (Object) player).setLocationAndAngles(event.getToTransform());
         toTransform = event.getToTransform();
         location = toTransform.getLocation();
@@ -598,11 +595,7 @@ public abstract class MixinPlayerList implements IMixinPlayerList {
         this.updatePermissionLevel(newPlayer);
         worldServer.getPlayerChunkMap().addPlayer(newPlayer);
         org.spongepowered.api.entity.Entity spongeEntity = (org.spongepowered.api.entity.Entity) newPlayer;
-        SpawnCause spawnCause = EntitySpawnCause.builder()
-                .entity(spongeEntity)
-                .type(SpawnTypes.PLACEMENT)
-                .build();
-        ((org.spongepowered.api.world.World) worldServer).spawnEntity(spongeEntity, Cause.of(NamedCause.source(spawnCause)));
+        ((org.spongepowered.api.world.World) worldServer).spawnEntity(spongeEntity);
         this.playerEntityList.add(newPlayer);
         this.uuidToPlayerMap.put(newPlayer.getUniqueID(), newPlayer);
         newPlayer.addSelfToInternalCraftingInventory();
@@ -812,7 +805,7 @@ public abstract class MixinPlayerList implements IMixinPlayerList {
     private void onPlayerRemoveFromWorldFromDisconnect(WorldServer world, Entity player, EntityPlayerMP playerMP) {
         final CauseTracker causeTracker = CauseTracker.getInstance();
         causeTracker.switchToPhase(PlayerPhase.State.PLAYER_LOGOUT, PhaseContext.start()
-                .add(NamedCause.source(playerMP))
+                .source(playerMP)
                 .addCaptures()
                 .complete()
         );

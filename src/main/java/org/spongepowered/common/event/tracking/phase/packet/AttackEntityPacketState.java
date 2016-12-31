@@ -27,7 +27,6 @@ package org.spongepowered.common.event.tracking.phase.packet;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketUseEntity;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.common.event.InternalNamedCauses;
 import org.spongepowered.common.event.tracking.PhaseContext;
@@ -40,21 +39,18 @@ final class AttackEntityPacketState extends BasicPacketState {
     @Override
     public boolean isPacketIgnored(Packet<?> packetIn, EntityPlayerMP packetPlayer) {
         final CPacketUseEntity useEntityPacket = (CPacketUseEntity) packetIn;
-        // There are cases where a player is interacting with an entity that doesn't exist on the server.
-        @Nullable net.minecraft.entity.Entity entity = useEntityPacket.getEntityFromWorld(packetPlayer.world);
+        // There are cases where a player is interacting with an entity that
+        // doesn't exist on the server.
+        @Nullable
+        net.minecraft.entity.Entity entity = useEntityPacket.getEntityFromWorld(packetPlayer.world);
         return entity == null;
     }
 
     @Override
     public void populateContext(EntityPlayerMP playerMP, Packet<?> packet, PhaseContext context) {
-        final CPacketUseEntity useEntityPacket = (CPacketUseEntity) packet;
-        net.minecraft.entity.Entity entity = useEntityPacket.getEntityFromWorld(playerMP.world);
-        // unused, to be removed and re-located when phase context is cleaned up
-        //context.add(NamedCause.of(InternalNamedCauses.Packet.TARGETED_ENTITY, entity));
-        //context.add(NamedCause.of(InternalNamedCauses.Packet.TRACKED_ENTITY_ID, entity.getEntityId()));
         final ItemStack stack = ItemStackUtil.cloneDefensive(playerMP.getHeldItemMainhand());
-        if (stack != null) {
-            context.add(NamedCause.of(InternalNamedCauses.Packet.ITEM_USED, stack));
+        if(stack != null) {
+            context.addExtra(InternalNamedCauses.Packet.ITEM_USED, stack);
         }
         context.addEntityDropCaptures()
                 .addEntityCaptures()

@@ -25,7 +25,7 @@
 package org.spongepowered.common.service.permission.base;
 
 import com.google.common.collect.ImmutableMap;
-import org.spongepowered.api.service.context.Context;
+import org.spongepowered.api.service.context.ServiceContext;
 import org.spongepowered.api.service.permission.MemorySubjectData;
 import org.spongepowered.api.service.permission.PermissionService;
 import org.spongepowered.api.service.permission.Subject;
@@ -48,12 +48,12 @@ public class GlobalMemorySubjectData extends MemorySubjectData {
 
 
     @Override
-    public Map<Set<Context>, List<Subject>> getAllParents() {
+    public Map<Set<ServiceContext>, List<Subject>> getAllParents() {
         return ImmutableMap.of(GLOBAL_CONTEXT, getParents(GLOBAL_CONTEXT));
     }
 
     @Override
-    public boolean setPermission(Set<Context> contexts, String permission, Tristate value) {
+    public boolean setPermission(Set<ServiceContext> contexts, String permission, Tristate value) {
         if (!GLOBAL_CONTEXT.equals(contexts)) {
             return false;
         }
@@ -61,7 +61,7 @@ public class GlobalMemorySubjectData extends MemorySubjectData {
     }
 
     @Override
-    public boolean clearPermissions(Set<Context> contexts) {
+    public boolean clearPermissions(Set<ServiceContext> contexts) {
         if (!GLOBAL_CONTEXT.equals(contexts)) {
             return false;
         }
@@ -69,7 +69,7 @@ public class GlobalMemorySubjectData extends MemorySubjectData {
     }
 
     @Override
-    public boolean addParent(Set<Context> contexts, Subject parent) {
+    public boolean addParent(Set<ServiceContext> contexts, Subject parent) {
         if (!GLOBAL_CONTEXT.equals(contexts)) {
             return false;
         }
@@ -77,7 +77,7 @@ public class GlobalMemorySubjectData extends MemorySubjectData {
     }
 
     @Override
-    public boolean removeParent(Set<Context> contexts, Subject parent) {
+    public boolean removeParent(Set<ServiceContext> contexts, Subject parent) {
         if (!GLOBAL_CONTEXT.equals(contexts)) {
             return false;
         }
@@ -85,7 +85,7 @@ public class GlobalMemorySubjectData extends MemorySubjectData {
     }
 
     @Override
-    public boolean clearParents(Set<Context> contexts) {
+    public boolean clearParents(Set<ServiceContext> contexts) {
         if (!GLOBAL_CONTEXT.equals(contexts)) {
             return false;
         }

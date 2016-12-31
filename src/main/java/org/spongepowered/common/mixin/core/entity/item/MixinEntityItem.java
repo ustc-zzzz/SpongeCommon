@@ -28,17 +28,12 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
-import org.apache.logging.log4j.Level;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.manipulator.mutable.RepresentedItemData;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.Item;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.translation.Translation;
@@ -49,16 +44,12 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.util.PrettyPrinter;
-import org.spongepowered.common.SpongeImpl;
 import org.spongepowered.common.data.manipulator.mutable.SpongeRepresentedItemData;
 import org.spongepowered.common.data.util.DataConstants;
 import org.spongepowered.common.data.util.NbtDataUtil;
 import org.spongepowered.common.data.value.mutable.SpongeValue;
-import org.spongepowered.common.interfaces.entity.item.IMixinEntityItem;
 import org.spongepowered.common.event.SpongeCommonEventFactory;
-import org.spongepowered.common.interfaces.world.IMixinWorld;
+import org.spongepowered.common.interfaces.entity.item.IMixinEntityItem;
 import org.spongepowered.common.interfaces.world.IMixinWorldServer;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 import org.spongepowered.common.mixin.core.entity.MixinEntity;
@@ -89,11 +80,6 @@ public abstract class MixinEntityItem extends MixinEntity implements Item, IMixi
     @Override
     public boolean infinitePickupDelay() {
         return this.infinitePickupDelay;
-    }
-
-    @Inject(method = "onUpdate()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/item/EntityItem;setDead()V"))
-    public void onEntityItemUpdate(CallbackInfo ci) {
-        this.destructCause = Cause.of(NamedCause.of("ExpiredItem", this));
     }
 
     @ModifyConstant(method = "searchForOtherItemsNearby", constant = @Constant(doubleValue = 0.5D))
@@ -207,11 +193,6 @@ public abstract class MixinEntityItem extends MixinEntity implements Item, IMixi
     @Override
     public ItemType getItemType() {
         return (ItemType) getEntityItem().getItem();
-    }
-
-    @Inject(method = "combineItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/item/EntityItem;setDead()V"))
-    public void onCombineItems(EntityItem other, CallbackInfoReturnable<Boolean> cir) {
-        this.destructCause = Cause.of(NamedCause.of("CombinedItem", other));
     }
 
     @Inject(method = "onCollideWithPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/item/EntityItem;getEntityItem()Lnet/minecraft/item/ItemStack;"), cancellable = true)

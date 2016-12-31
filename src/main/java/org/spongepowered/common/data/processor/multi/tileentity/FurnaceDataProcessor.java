@@ -34,9 +34,7 @@ import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.immutable.tileentity.ImmutableFurnaceData;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.FurnaceData;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.world.World;
-import org.spongepowered.common.SpongeImpl;
 import org.spongepowered.common.data.manipulator.mutable.tileentity.SpongeFurnaceData;
 import org.spongepowered.common.data.processor.common.AbstractTileEntityDataProcessor;
 import org.spongepowered.common.data.util.ImplementationRequiredForTest;
@@ -51,8 +49,6 @@ public class FurnaceDataProcessor extends AbstractTileEntityDataProcessor<TileEn
         super(TileEntityFurnace.class);
     }
 
-    private Cause cause;
-
     @Override
     protected boolean doesDataExist(TileEntityFurnace tileEntity) {
         return true; //if it's an TileEntityFurnace it always has the data
@@ -66,9 +62,6 @@ public class FurnaceDataProcessor extends AbstractTileEntityDataProcessor<TileEn
         // 1 : currentItemBurnTime -> equal to maxBurnTime
         // 2 : cookTime -> equal to passedCookTime
         // 3 : totalCookTime -> equal to maxCookTime
-        if (this.cause == null) { // lazy evaluation because of tests
-            this.cause = SpongeImpl.getImplementationCause();
-        }
 
         final int passedBurnTime = (Integer) keyValues.get(Keys.PASSED_BURN_TIME); //time (int) the fuel item already burned
         final int maxBurnTime = (Integer) keyValues.get(Keys.MAX_BURN_TIME); //time (int) the fuel can burn until its depleted
@@ -84,7 +77,7 @@ public class FurnaceDataProcessor extends AbstractTileEntityDataProcessor<TileEn
         if (needsUpdate) {
             final World world = (World) tileEntity.getWorld();
             world.setBlockType(tileEntity.getPos().getX(), tileEntity.getPos().getY(),
-                    tileEntity.getPos().getZ(), maxBurnTime > 0 ? BlockTypes.LIT_FURNACE : BlockTypes.FURNACE, this.cause);
+                    tileEntity.getPos().getZ(), maxBurnTime > 0 ? BlockTypes.LIT_FURNACE : BlockTypes.FURNACE);
             tileEntity = (TileEntityFurnace) tileEntity.getWorld().getTileEntity(tileEntity.getPos());
         }
 

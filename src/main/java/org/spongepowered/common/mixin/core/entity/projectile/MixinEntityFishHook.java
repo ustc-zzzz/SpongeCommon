@@ -36,6 +36,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTableList;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
@@ -43,8 +44,6 @@ import org.spongepowered.api.entity.projectile.FishHook;
 import org.spongepowered.api.entity.projectile.source.ProjectileSource;
 import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.action.FishingEvent;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.asm.mixin.Mixin;
@@ -128,7 +127,8 @@ public abstract class MixinEntityFishHook extends MixinEntity implements FishHoo
                 // Sponge start
                 // TODO 1.9: Figure out how we want experience to work here
                 List<net.minecraft.item.ItemStack> itemstacks = this.world.getLootTableManager().getLootTableFromLocation(LootTableList.GAMEPLAY_FISHING).generateLootForPools(this.rand, lootcontext$builder.build());
-                FishingEvent.Stop event = SpongeEventFactory.createFishingEventStop(Cause.of(NamedCause.source(this.angler)), 0, 0,
+                Sponge.getCauseStackManager().pushCause(this.angler);
+                FishingEvent.Stop event = SpongeEventFactory.createFishingEventStop(Sponge.getCauseStackManager().getCurrentCause(), 0, 0,
                         this.createSnapshot(), this, itemstacks.stream().map(s -> {
                             ItemStackSnapshot snapshot = ((ItemStack) s).createSnapshot();
                             return new Transaction<>(snapshot, snapshot);
@@ -156,6 +156,7 @@ public abstract class MixinEntityFishHook extends MixinEntity implements FishHoo
                         }
                     }
                 }
+                Sponge.getCauseStackManager().popCause();
 
 
                 i = 1;

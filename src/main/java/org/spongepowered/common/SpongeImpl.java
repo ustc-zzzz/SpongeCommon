@@ -85,6 +85,7 @@ public final class SpongeImpl {
     @Inject private static SpongePropertyRegistry propertyRegistry;
 
     @Inject private static SpongeScheduler scheduler;
+    @Inject private static SpongeCauseStackManager causeStackManager;
 
     private static final List<PluginContainer> internalPlugins = new ArrayList<>();
     private static Cause implementationCause;
@@ -99,10 +100,8 @@ public final class SpongeImpl {
         }
 
         for (Platform.Component component : Platform.Component.values()) {
-            internalPlugins.add(platform.getContainer(component));
+            this.internalPlugins.add(platform.getContainer(component));
         }
-
-        implementationCause = Cause.source(platform.getContainer(IMPLEMENTATION)).build();
     }
 
     private static <T> T check(@Nullable T instance) {
@@ -203,5 +202,4 @@ public final class SpongeImpl {
         postState(GameState.GAME_STOPPING, SpongeEventFactory.createGameStoppingEvent(Cause.source(game).build()));
         postState(GameState.GAME_STOPPED, SpongeEventFactory.createGameStoppedEvent(Cause.source(game).build()));
     }
-
 }
