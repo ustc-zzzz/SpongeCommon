@@ -341,6 +341,7 @@
         "network.play.server.MixinSPacketWorldBorder",
         "potion.MixinPotion",
         "potion.MixinPotionEffect",
+        "profiler.MixinProfiler",
         "scoreboard.MixinCollisionRule",
         "scoreboard.MixinCriterion",
         "scoreboard.MixinEnumVisible",
