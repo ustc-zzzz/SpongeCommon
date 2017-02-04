@@ -100,11 +100,11 @@ public class BoatTreeTypeValueProcessor extends AbstractEntitySingleDataProcesso
 
     @Override
     protected ImmutableValue<TreeType> constructImmutableValue(TreeType value) {
-        return new ImmutableSpongeValue<>(Keys.TREE_TYPE, value);
+        return new ImmutableSpongeValue<>(this.key, value);
     }
 
     @Override
     protected Value<TreeType> constructValue(TreeType actualValue) {
-        return new SpongeValue<>(Keys.TREE_TYPE, actualValue);
+        return new SpongeValue<>(this.key, actualValue);
     }
 }
