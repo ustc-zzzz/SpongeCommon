@@ -47,7 +47,10 @@ public class TreeDataProcessor extends AbstractCatalogDataProcessor<TreeType, Va
         super(Keys.TREE_TYPE, input -> input.getItem() == ItemTypes.PLANKS || input.getItem() == ItemTypes.LEAVES
                 || input.getItem() == ItemTypes.LEAVES2 || input.getItem() == ItemTypes.LOG
                 || input.getItem() == ItemTypes.LOG2 || input.getItem() == ItemTypes.SAPLING
-                || input.getItem() == ItemTypes.WOODEN_SLAB);
+                || input.getItem() == ItemTypes.WOODEN_SLAB || input.getItem() == ItemTypes.BOAT
+                || input.getItem() == ItemTypes.ACACIA_BOAT || input.getItem() == ItemTypes.BIRCH_BOAT
+                || input.getItem() == ItemTypes.DARK_OAK_BOAT || input.getItem() == ItemTypes.JUNGLE_BOAT
+                || input.getItem() == ItemTypes.SPRUCE_BOAT);
     }
 
     @Override
@@ -64,6 +67,18 @@ public class TreeDataProcessor extends AbstractCatalogDataProcessor<TreeType, Va
     protected Optional<TreeType> getVal(ItemStack stack) {
         if (stack.getItem() == ItemTypes.LEAVES2 || stack.getItem() == ItemTypes.LOG2) {
             return Optional.of(getFromMeta(stack.getItemDamage() + 4));
+        } else if (stack.getItem() == ItemTypes.BOAT) {
+            return Optional.of(TreeTypes.OAK);
+        } else if (stack.getItem() == ItemTypes.ACACIA_BOAT) {
+            return Optional.of(TreeTypes.ACACIA);
+        } else if (stack.getItem() == ItemTypes.BIRCH_BOAT) {
+            return Optional.of(TreeTypes.BIRCH);
+        } else if (stack.getItem() == ItemTypes.DARK_OAK_BOAT) {
+            return Optional.of(TreeTypes.DARK_OAK);
+        } else if (stack.getItem() == ItemTypes.JUNGLE_BOAT) {
+            return Optional.of(TreeTypes.JUNGLE);
+        } else if (stack.getItem() == ItemTypes.SPRUCE_BOAT) {
+            return Optional.of(TreeTypes.SPRUCE);
         } else {
             return Optional.of(getFromMeta(stack.getItemDamage()));
         }

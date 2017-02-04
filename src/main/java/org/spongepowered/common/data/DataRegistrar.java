@@ -285,6 +285,9 @@ public class DataRegistrar {
         dataManager.registerDataProcessorAndImpl(VehicleData.class, SpongeVehicleData.class, ImmutableVehicleData.class,
                 ImmutableSpongeVehicleData.class, new VehicleDataProcessor());
 
+        dataManager.registerDualProcessor(TreeData.class, SpongeTreeData.class, ImmutableTreeData.class,
+                ImmutableSpongeTreeData.class, new BoatTreeTypeValueProcessor());
+
         dataManager.registerDualProcessor(PassengerData.class, SpongePassengerData.class, ImmutablePassengerData.class,
                 ImmutableSpongePassengerData.class, new PassengerDataProcessor());
 
