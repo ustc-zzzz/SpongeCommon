@@ -275,10 +275,10 @@ public class SpongeCommonEventFactory {
                 Sponge.getCauseStackManager().addContext(EventContextKeys.NOTIFIER, notifier);
             }
         }
-        Sponge.getCauseStackManager().pushCause(source);
         if(isFake) {
             Sponge.getCauseStackManager().pushCause(owner);
         }
+        Sponge.getCauseStackManager().pushCause(source);
 
         ChangeBlockEvent.Pre event =
                 SpongeEventFactory.createChangeBlockEventPre(Sponge.getCauseStackManager().getCurrentCause(), locations);
@@ -350,7 +350,6 @@ public class SpongeCommonEventFactory {
                 .location(new Location<World>(world, sourcePos.getX(), sourcePos.getY(), sourcePos.getZ()))
                 .state(blockstate)
                 .build();
-        Sponge.getCauseStackManager().pushCause(locatable);
         if (context.getNotifier().isPresent()) {
             context.addNotifierAndOwnerToCauseStack();
         } else {
@@ -359,6 +358,7 @@ public class SpongeCommonEventFactory {
             mixinChunk.getBlockNotifier(sourcePos).ifPresent(user -> Sponge.getCauseStackManager().addContext(EventContextKeys.NOTIFIER, user));
             mixinChunk.getBlockOwner(sourcePos).ifPresent(owner -> Sponge.getCauseStackManager().addContext(EventContextKeys.OWNER, owner));
         }
+        Sponge.getCauseStackManager().pushCause(locatable);
 
         final Map<Direction, BlockState> neighbors = new HashMap<>();
         for (Object obj : notifiedSides) {

@@ -65,10 +65,9 @@ import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.entity.EntitySnapshot;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.User;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.entity.CollideEntityEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.util.AABB;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.PositionOutOfBoundsException;
@@ -805,37 +804,37 @@ public abstract class MixinChunk implements Chunk, IMixinChunk, IMixinCachable {
     }
 
     @Override
-    public boolean hitBlock(int x, int y, int z, Direction side, Cause cause) {
+    public boolean hitBlock(int x, int y, int z, Direction side, GameProfile cause) {
         return this.sponge_world.hitBlock((this.xPosition << 4) + (x & 15), y, (this.zPosition << 4) + (z & 15), side, cause);
     }
 
     @Override
-    public boolean interactBlock(int x, int y, int z, Direction side, Cause cause) {
+    public boolean interactBlock(int x, int y, int z, Direction side, GameProfile cause) {
         return this.sponge_world.interactBlock((this.xPosition << 4) + (x & 15), y, (this.zPosition << 4) + (z & 15), side, cause);
     }
 
     @Override
-    public boolean placeBlock(int x, int y, int z, BlockState block, Direction side, Cause cause) {
+    public boolean placeBlock(int x, int y, int z, BlockState block, Direction side, GameProfile cause) {
         return this.sponge_world.placeBlock((this.xPosition << 4) + (x & 15), y, (this.zPosition << 4) + (z & 15), block, side, cause);
     }
 
     @Override
-    public boolean interactBlockWith(int x, int y, int z, ItemStack itemStack, Direction side, Cause cause) {
+    public boolean interactBlockWith(int x, int y, int z, ItemStack itemStack, Direction side, GameProfile cause) {
         return this.sponge_world.interactBlockWith((this.xPosition << 4) + (x & 15), y, (this.zPosition << 4) + (z & 15), itemStack, side, cause);
     }
 
     @Override
-    public boolean digBlock(int x, int y, int z, Cause cause) {
+    public boolean digBlock(int x, int y, int z, GameProfile cause) {
         return this.sponge_world.digBlock((this.xPosition << 4) + (x & 15), y, (this.zPosition << 4) + (z & 15), cause);
     }
 
     @Override
-    public boolean digBlockWith(int x, int y, int z, ItemStack itemStack, Cause cause) {
+    public boolean digBlockWith(int x, int y, int z, ItemStack itemStack, GameProfile cause) {
         return this.sponge_world.digBlockWith((this.xPosition << 4) + (x & 15), y, (this.zPosition << 4) + (z & 15), itemStack, cause);
     }
 
     @Override
-    public int getBlockDigTimeWith(int x, int y, int z, ItemStack itemStack, Cause cause) {
+    public int getBlockDigTimeWith(int x, int y, int z, ItemStack itemStack, GameProfile cause) {
         return this.sponge_world.getBlockDigTimeWith((this.xPosition << 4) + (x & 15), y, (this.zPosition << 4) + (z & 15), itemStack, cause);
     }
 

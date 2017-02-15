@@ -38,7 +38,6 @@ import org.spongepowered.api.Platform;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.SpongeEventFactory;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.game.state.GameStateEvent;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.common.config.SpongeConfig;
@@ -199,7 +198,7 @@ public final class SpongeImpl {
 
     public static void postShutdownEvents() {
         check(game);
-        postState(GameState.GAME_STOPPING, SpongeEventFactory.createGameStoppingEvent(Cause.source(game).build()));
-        postState(GameState.GAME_STOPPED, SpongeEventFactory.createGameStoppedEvent(Cause.source(game).build()));
+        postState(GameState.GAME_STOPPING, SpongeEventFactory.createGameStoppingEvent(Sponge.getCauseStackManager().getCurrentCause()));
+        postState(GameState.GAME_STOPPED, SpongeEventFactory.createGameStoppedEvent(Sponge.getCauseStackManager().getCurrentCause()));
     }
 }

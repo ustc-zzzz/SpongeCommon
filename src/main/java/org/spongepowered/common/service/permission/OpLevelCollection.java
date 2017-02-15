@@ -27,7 +27,7 @@ package org.spongepowered.common.service.permission;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.service.context.ServiceContext;
+import org.spongepowered.api.service.context.Context;
 import org.spongepowered.api.service.permission.MemorySubjectData;
 import org.spongepowered.api.service.permission.PermissionService;
 import org.spongepowered.api.service.permission.Subject;
@@ -89,7 +89,7 @@ public class OpLevelCollection extends SpongeSubjectCollection {
             this.data = new GlobalMemorySubjectData(service) {
 
                 @Override
-                public List<Subject> getParents(Set<ServiceContext> contexts) {
+                public List<Subject> getParents(Set<Context> contexts) {
                     if (!GLOBAL_CONTEXT.equals(contexts)) {
                         return Collections.emptyList();
                     }

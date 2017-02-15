@@ -29,7 +29,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.rcon.RConConsoleSource;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntityCommandBlock;
-import org.spongepowered.api.service.context.ServiceContext;
+import org.spongepowered.api.service.context.Context;
 import org.spongepowered.api.service.permission.PermissionService;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.service.permission.SubjectCollection;
@@ -122,7 +122,7 @@ public abstract class MixinSubject implements Subject, IMixinCommandSource, IMix
     }
 
     @Override
-    public boolean hasPermission(Set<ServiceContext> contexts, String permission) {
+    public boolean hasPermission(Set<Context> contexts, String permission) {
         Subject subj = internalSubject();
         if (subj == null) {
             return this.permDefault(permission).asBoolean();
@@ -143,7 +143,7 @@ public abstract class MixinSubject implements Subject, IMixinCommandSource, IMix
     }
 
     @Override
-    public Tristate getPermissionValue(Set<ServiceContext> contexts, String permission) {
+    public Tristate getPermissionValue(Set<Context> contexts, String permission) {
         Subject subj = internalSubject();
         return subj == null ? this.permDefault(permission) : subj.getPermissionValue(contexts, permission);
     }
@@ -155,7 +155,7 @@ public abstract class MixinSubject implements Subject, IMixinCommandSource, IMix
     }
 
     @Override
-    public boolean isChildOf(Set<ServiceContext> contexts, Subject parent) {
+    public boolean isChildOf(Set<Context> contexts, Subject parent) {
         Subject subj = internalSubject();
         return subj != null && subj.isChildOf(contexts, parent);
     }
@@ -167,19 +167,19 @@ public abstract class MixinSubject implements Subject, IMixinCommandSource, IMix
     }
 
     @Override
-    public List<Subject> getParents(Set<ServiceContext> contexts) {
+    public List<Subject> getParents(Set<Context> contexts) {
         Subject subj = internalSubject();
         return subj == null ? Collections.<Subject>emptyList() : subj.getParents(contexts);
     }
 
     @Override
-    public Set<ServiceContext> getActiveContexts() {
+    public Set<Context> getActiveContexts() {
         Subject subj = internalSubject();
-        return subj == null ? Collections.<ServiceContext>emptySet() : subj.getActiveContexts();
+        return subj == null ? Collections.<Context>emptySet() : subj.getActiveContexts();
     }
 
     @Override
-    public Optional<String> getOption(Set<ServiceContext> contexts, String key) {
+    public Optional<String> getOption(Set<Context> contexts, String key) {
         Subject subj = internalSubject();
         return subj == null ? Optional.empty() : subj.getOption(contexts, key);
     }

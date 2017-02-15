@@ -50,9 +50,8 @@ import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.damage.DamageFunction;
 import org.spongepowered.api.event.cause.EventContext;
-import org.spongepowered.api.event.cause.entity.damage.DamageFunction;
-import org.spongepowered.api.event.cause.EventContext;
 import org.spongepowered.api.event.cause.EventContextKeys;
+import org.spongepowered.api.event.cause.entity.damage.DamageFunction;
 import org.spongepowered.api.event.cause.entity.damage.DamageModifier;
 import org.spongepowered.api.event.cause.entity.damage.DamageModifierTypes;
 import org.spongepowered.api.event.cause.entity.damage.source.BlockDamageSource;
@@ -61,7 +60,6 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
-import org.spongepowered.api.util.Tuple;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.common.data.util.NbtDataUtil;
@@ -363,7 +361,8 @@ public class DamageEventHandler {
             net.minecraft.entity.Entity source = damageSource.getEntity();
             if (!(source instanceof EntityPlayer) && source != null) {
                 final IMixinEntity mixinEntity = EntityUtil.toMixin(source);
-                mixinEntity.getNotifier().ifPresent(notifier -> Sponge.getCauseStackManager().addContext(EventContextKeys.NOTIFIER, notifier));
+                // TODO only have a UUID, want a user
+                //mixinEntity.getNotifier().ifPresent(notifier -> Sponge.getCauseStackManager().addContext(EventContextKeys.NOTIFIER, notifier));
                 mixinEntity.getCreator().ifPresent(creator -> Sponge.getCauseStackManager().addContext(EventContextKeys.CREATOR, creator));
             }
         } else if (damageSource instanceof BlockDamageSource) {
@@ -371,7 +370,7 @@ public class DamageEventHandler {
             BlockPos blockPos = ((IMixinLocation) (Object) location).getBlockPos();
             final IMixinChunk mixinChunk = (IMixinChunk) ((net.minecraft.world.World) location.getExtent()).getChunkFromBlockCoords(blockPos);
             mixinChunk.getBlockNotifier(blockPos).ifPresent(notifier -> Sponge.getCauseStackManager().addContext(EventContextKeys.NOTIFIER, notifier));
-            mixinChunk.getBlockOwner(blockPos).ifPresent(owner -> Sponge.getCauseStackManager().addContext(EventContextKeys.CREATOR, owner));
+            mixinChunk.getBlockOwner(blockPos).ifPresent(owner -> Sponge.getCauseStackManager().addContext(EventContextKeys.CREATOR, owner.getUniqueId()));
         }
         Sponge.getCauseStackManager().pushCause(damageSource);
     }
