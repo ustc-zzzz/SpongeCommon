@@ -41,6 +41,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.game.state.GameStateEvent;
 import org.spongepowered.api.event.game.state.GameStoppedEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
@@ -97,6 +98,7 @@ public final class SpongeImpl {
     private final Game game;
     private final PluginContainer plugin;
     private final PluginContainer minecraftPlugin;
+    private final Cause gameCause;
     private final Cause implementationCause;
 
     @Nullable
@@ -111,7 +113,8 @@ public final class SpongeImpl {
         this.game = checkNotNull(game, "game");
         this.plugin = checkNotNull(plugin, "plugin");
         this.minecraftPlugin = checkNotNull(minecraftPlugin, "minecraftPlugin");
-        this.implementationCause = Cause.source(this.plugin).build();
+        this.gameCause = Cause.of(NamedCause.source(game));
+        this.implementationCause = Cause.of(NamedCause.source(plugin));
     }
 
     public static SpongeImpl getInstance() {
@@ -195,18 +198,23 @@ public final class SpongeImpl {
         return components;
     }
 
-    public static void postState(GameState state, Function<GameState, GameStateEvent> f) {
-        getGame().setState(state);
-        ((SpongeEventManager) getGame().getEventManager()).post(f.apply(state), true);
+    public static void postState(GameStateEvent event) {
+        getGame().setState(event.getState());
+        ((SpongeEventManager) getGame().getEventManager()).post(event, true);
     }
 
     public static void postShutdownEvents() {
-        postState(GameState.GAME_STOPPING, s -> SpongeEventFactory.createGameStoppingEvent(Cause.source(getGame()).build(), s));
-        postState(GameState.GAME_STOPPED, s -> SpongeEventFactory.createGameStoppedEvent(Cause.source(getGame()).build(), s));
+        Cause cause = Cause.of(NamedCause.source(getGame()));
+        postState(SpongeEventFactory.createGameStoppingEvent(cause));
+        postState(SpongeEventFactory.createGameStoppedEvent(cause));
     }
 
     private static Package getPackage() {
         return SpongeImpl.class.getPackage();
+    }
+
+    public static Cause getGameCause() {
+        return getInstance().gameCause;
     }
 
     public static Cause getImplementationCause() {
