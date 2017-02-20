@@ -32,7 +32,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.EntityTrackerEntry;
@@ -69,11 +68,9 @@ import net.minecraft.world.WorldServer;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.type.Profession;
-import org.spongepowered.api.data.type.Professions;
-import org.spongepowered.api.data.type.ZombieTypes;
 import org.spongepowered.api.entity.EntityArchetype;
-import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntitySnapshot;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.Humanoid;
@@ -269,9 +266,8 @@ public final class EntityUtil {
         if (entity instanceof EntityLivingBase) {
             EntityLivingBase base = (EntityLivingBase) entity;
             return base.getHealth() <= 0 || base.deathTime > 0 || base.dead;
-        } else {
-            return entity.isDead;
         }
+        return entity.isDead;
     }
 
     public static MoveEntityEvent.Teleport handleDisplaceEntityTeleportEvent(Entity entityIn, Location<World> location) {
@@ -544,10 +540,8 @@ public final class EntityUtil {
         return source.world.rayTraceBlocks(traceStart, traceEnd, false, false, true);
     }
 
-    public static Vec3d getPositionEyes(Entity entity, float partialTicks)
-    {
-        if (partialTicks == 1.0F)
-        {
+    public static Vec3d getPositionEyes(Entity entity, float partialTicks) {
+        if (partialTicks == 1.0F) {
             return new Vec3d(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
         }
 
@@ -556,6 +550,7 @@ public final class EntityUtil {
         double interpZ = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks;
         return new Vec3d(interpX, interpY, interpZ);
     }
+
     @SuppressWarnings("unchecked")
     public static boolean refreshPainting(EntityPainting painting, EntityPainting.EnumArt art) {
         EntityPainting.EnumArt oldArt = painting.art;
@@ -743,12 +738,6 @@ public final class EntityUtil {
         return (IMixinEntity) entity;
     }
 
-    public static org.spongepowered.api.entity.Entity fromMixin(IMixinEntity mixinEntity) {
-        if (!(mixinEntity instanceof org.spongepowered.api.entity.Entity)) {
-            throw new IllegalArgumentException("Not a native SpongeAPI entity!");
-        }
-        return (org.spongepowered.api.entity.Entity) mixinEntity;
-    }
     public static EntitySnapshot createSnapshot(Entity entity) {
         return fromNative(entity).createSnapshot();
     }
@@ -916,20 +905,17 @@ public final class EntityUtil {
 
         if (!item.isEmpty()) {
             if (CauseTracker.ENABLED && !currentState.getPhase().ignoresItemPreMerging(currentState) && SpongeImpl.getGlobalConfig().getConfig().getOptimizations().doDropsPreMergeItemDrops()) {
+                Collection<ItemDropData> itemStacks;
                 if (currentState.tracksEntitySpecificDrops()) {
                     final Multimap<UUID, ItemDropData> multimap = phaseContext.getCapturedEntityDropSupplier().get();
-                    final Collection<ItemDropData> itemStacks = multimap.get(entity.getUniqueID());
-                    SpongeImplHooks.addItemStackToListForSpawning(itemStacks, ItemDropData.item(item)
-                            .position(new Vector3d(posX, posY, posZ))
-                            .build());
-                    return null;
+                    itemStacks = multimap.get(entity.getUniqueID());
                 } else {
-                    final List<ItemDropData> itemStacks = phaseContext.getCapturedItemStackSupplier().get();
-                    SpongeImplHooks.addItemStackToListForSpawning(itemStacks, ItemDropData.item(item)
-                            .position(new Vector3d(posX, posY, posZ))
-                            .build());
-                    return null;
+                    itemStacks = phaseContext.getCapturedItemStackSupplier().get();
                 }
+                SpongeImplHooks.addItemStackToListForSpawning(itemStacks, ItemDropData.item(item)
+                        .position(new Vector3d(posX, posY, posZ))
+                        .build());
+                return null;
             }
             EntityItem entityitem = new EntityItem(entity.world, posX, posY, posZ, item);
             entityitem.setDefaultPickupDelay();
@@ -989,28 +975,21 @@ public final class EntityUtil {
         final PhaseContext phaseContext = peek.context;
 
         if (CauseTracker.ENABLED && !currentState.getPhase().ignoresItemPreMerging(currentState) && SpongeImpl.getGlobalConfig().getConfig().getOptimizations().doDropsPreMergeItemDrops()) {
+            Collection<ItemDropData> itemStacks;
             if (currentState.tracksEntitySpecificDrops()) {
                 final Multimap<UUID, ItemDropData> multimap = phaseContext.getCapturedEntityDropSupplier().get();
-                final Collection<ItemDropData> itemStacks = multimap.get(player.getUniqueID());
-                SpongeImplHooks.addItemStackToListForSpawning(itemStacks, ItemDropData.Player.player(player)
-                        .stack(item)
-                        .trace(traceItem)
-                        .motion(createDropMotion(dropAround, player, mixinPlayer.getRandom()))
-                        .dropAround(dropAround)
-                        .position(new Vector3d(posX, adjustedPosY, posZ))
-                        .build());
-                return null;
+                itemStacks = multimap.get(player.getUniqueID());
             } else {
-                final List<ItemDropData> itemStacks = phaseContext.getCapturedItemStackSupplier().get();
-                SpongeImplHooks.addItemStackToListForSpawning(itemStacks, ItemDropData.Player.player(player)
-                        .stack(item)
-                        .trace(traceItem)
-                        .motion(createDropMotion(dropAround, player, mixinPlayer.getRandom()))
-                        .dropAround(dropAround)
-                        .position(new Vector3d(posX, adjustedPosY, posZ))
-                        .build());
-                return null;
+                itemStacks = phaseContext.getCapturedItemStackSupplier().get();
             }
+            SpongeImplHooks.addItemStackToListForSpawning(itemStacks, ItemDropData.Player.player(player)
+                    .stack(item)
+                    .trace(traceItem)
+                    .motion(createDropMotion(dropAround, player, mixinPlayer.getRandom()))
+                    .dropAround(dropAround)
+                    .position(new Vector3d(posX, adjustedPosY, posZ))
+                    .build());
+            return null;
         }
 
         EntityItem entityitem = new EntityItem(player.world, posX, adjustedPosY, posZ, droppedItem);

@@ -726,9 +726,8 @@ public abstract class MixinWorldInfo implements WorldProperties, IMixinWorldInfo
         if (this.spongeRootLevelNbt.hasKey(path.toString())) {
             return Optional
                     .<DataView>of(NbtTranslator.getInstance().translateFrom(this.spongeRootLevelNbt.getCompoundTag(path.toString())));
-        } else {
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 
     @Override
@@ -743,9 +742,8 @@ public abstract class MixinWorldInfo implements WorldProperties, IMixinWorldInfo
             this.playerUniqueIdMap.put(this.trackedUniqueIdCount, uuid);
             this.pendingUniqueIds.add(uuid);
             return this.trackedUniqueIdCount++;
-        } else {
-            return this.playerUniqueIdMap.inverse().get(uuid);
         }
+        return this.playerUniqueIdMap.inverse().get(uuid);
     }
 
     @Override

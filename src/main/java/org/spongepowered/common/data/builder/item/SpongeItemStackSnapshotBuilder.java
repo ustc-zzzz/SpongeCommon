@@ -31,7 +31,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.ImmutableDataManipulator;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
-import org.spongepowered.api.data.persistence.DataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
@@ -45,7 +44,7 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-public class SpongeItemStackSnapshotBuilder extends AbstractDataBuilder<ItemStackSnapshot> implements DataBuilder<ItemStackSnapshot> {
+public class SpongeItemStackSnapshotBuilder extends AbstractDataBuilder<ItemStackSnapshot> {
 
     private final static int SUPPORTED_VERSION = 1;
 

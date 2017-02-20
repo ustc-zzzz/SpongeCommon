@@ -32,12 +32,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.merge.MergeFunction;
-import org.spongepowered.api.data.persistence.DataBuilder;
+import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.common.SpongeImpl;
-import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.common.data.persistence.NbtTranslator;
 import org.spongepowered.common.data.util.DataQueries;
 import org.spongepowered.common.data.util.DataUtil;
@@ -46,7 +45,7 @@ import org.spongepowered.common.interfaces.data.IMixinCustomDataHolder;
 import java.util.List;
 import java.util.Optional;
 
-public class SpongeItemStackDataBuilder extends AbstractDataBuilder<ItemStack> implements DataBuilder<ItemStack> {
+public class SpongeItemStackDataBuilder extends AbstractDataBuilder<ItemStack> {
 
     public SpongeItemStackDataBuilder() {
         super(ItemStack.class, 1);

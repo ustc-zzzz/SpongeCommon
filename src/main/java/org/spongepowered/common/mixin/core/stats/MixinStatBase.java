@@ -29,7 +29,6 @@ import net.minecraft.stats.IStatType;
 import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.ITextComponent;
 import org.spongepowered.api.scoreboard.critieria.Criterion;
-import org.spongepowered.api.statistic.Statistic;
 import org.spongepowered.api.text.translation.Translation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -50,7 +49,7 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 @Mixin(value = StatBase.class)
-public abstract class MixinStatBase implements Statistic, SpongeStatistic, IMixinStatBase {
+public abstract class MixinStatBase implements SpongeStatistic, IMixinStatBase {
 
     @Shadow @Final private static NumberFormat numberFormat;
     @Shadow @Final private static DecimalFormat decimalFormat;
@@ -65,7 +64,7 @@ public abstract class MixinStatBase implements Statistic, SpongeStatistic, IMixi
     private String spongeId;
 
     @Inject(method = "registerStat()Lnet/minecraft/stats/StatBase;", at = @At("RETURN"))
-    public void registerStat(CallbackInfoReturnable ci) {
+    public void registerStat(CallbackInfoReturnable<StatBase> ci) {
         if (!isAchievement()) {
             StatisticRegistryModule.getInstance().registerAdditionalCatalog(this);
         }

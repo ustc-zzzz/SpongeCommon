@@ -37,7 +37,6 @@ import net.minecraft.block.BlockRedstoneLight;
 import net.minecraft.block.BlockRedstoneRepeater;
 import net.minecraft.block.BlockRedstoneTorch;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.boss.dragon.phase.IPhase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ITickable;

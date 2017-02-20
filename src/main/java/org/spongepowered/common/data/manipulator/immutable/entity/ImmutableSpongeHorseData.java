@@ -24,9 +24,7 @@
  */
 package org.spongepowered.common.data.manipulator.immutable.entity;
 
-import com.google.common.collect.ComparisonChain;
 import org.spongepowered.api.data.DataContainer;
-import org.spongepowered.api.data.MemoryDataContainer;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.immutable.entity.ImmutableHorseData;
 import org.spongepowered.api.data.manipulator.mutable.entity.HorseData;
@@ -41,6 +39,7 @@ import org.spongepowered.common.data.manipulator.immutable.common.AbstractImmuta
 import org.spongepowered.common.data.manipulator.mutable.entity.SpongeHorseData;
 import org.spongepowered.common.data.value.immutable.ImmutableSpongeValue;
 
+@SuppressWarnings("deprecation")
 public class ImmutableSpongeHorseData extends AbstractImmutableData<ImmutableHorseData, HorseData> implements ImmutableHorseData {
 
     private final HorseColor horseColor;

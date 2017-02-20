@@ -74,7 +74,7 @@ import javax.annotation.Nullable;
  * TODO Future note about data: The following data manipulators are always
  * applicable to User: BanData, WhitelistData, JoinData
  */
-public class SpongeUser implements ArmorEquipable, Tamer, DataSerializable, Carrier, ISpongeUser {
+public class SpongeUser implements ArmorEquipable, Tamer, DataSerializable, ISpongeUser {
 
     public static final Set<SpongeUser> dirtyUsers = Sets.newHashSet();
 

@@ -259,9 +259,8 @@ public abstract class Element {
         if (parent == null) {
             fixedRoot.set(child);
             return child;
-        } else {
-            parent.mixedContent.add(child);
-            return child;
         }
+        parent.mixedContent.add(child);
+        return child;
     }
 }

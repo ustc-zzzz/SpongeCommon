@@ -633,15 +633,14 @@ public class SpongeCommonEventFactory {
         if (event.isCancelled()) {
             player.closeScreen();
             return false;
-        } else {
-            // TODO - determine if/how we want to fire inventory events outside of click poaket handlers
-            //((IMixinContainer) player.openContainer).setCaptureInventory(true);
-            // Custom cursor
-            if (event.getCursorTransaction().getCustom().isPresent()) {
-                handleCustomCursor(player, event.getCursorTransaction().getFinal());
-            }
-            return true;
         }
+        // TODO - determine if/how we want to fire inventory events outside of click poaket handlers
+        //((IMixinContainer) player.openContainer).setCaptureInventory(true);
+        // Custom cursor
+        if (event.getCursorTransaction().getCustom().isPresent()) {
+            handleCustomCursor(player, event.getCursorTransaction().getFinal());
+        }
+        return true;
     }
 
     public static InteractInventoryEvent.Close callInteractInventoryCloseEvent(Cause cause, Container container, EntityPlayerMP player, ItemStackSnapshot lastCursor, ItemStackSnapshot newCursor, boolean clientSource) {

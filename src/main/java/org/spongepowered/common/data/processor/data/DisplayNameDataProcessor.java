@@ -80,11 +80,10 @@ public class DisplayNameDataProcessor extends AbstractSingleDataProcessor<Text, 
     public Optional<DisplayNameData> from(DataHolder holder) {
         if (holder instanceof Entity) {
             @Nullable Text displayName = ((IMixinEntity) holder).getDisplayNameText();
-            if (displayName != null) {
-                return Optional.of(new SpongeDisplayNameData(displayName));
-            } else {
+            if (displayName == null) {
                 return Optional.empty();
             }
+            return Optional.of(new SpongeDisplayNameData(displayName));
         } else if (holder instanceof ItemStack) {
             ItemStack stack = (ItemStack) holder;
             if (!stack.hasDisplayName()) {
@@ -101,21 +100,15 @@ public class DisplayNameDataProcessor extends AbstractSingleDataProcessor<Text, 
             }
 
             final NBTTagCompound compound = ((ItemStack) holder).getSubCompound(NbtDataUtil.ITEM_DISPLAY);
-            if (compound != null && compound.hasKey(NbtDataUtil.ITEM_DISPLAY_NAME, NbtDataUtil.TAG_STRING)) {
-                return Optional.of(new SpongeDisplayNameData(SpongeTexts.fromLegacy(compound.getString(NbtDataUtil.ITEM_DISPLAY_NAME))));
-            } else {
+            if (compound == null || !compound.hasKey(NbtDataUtil.ITEM_DISPLAY_NAME, NbtDataUtil.TAG_STRING)) {
                 return Optional.empty();
             }
-        } else if (holder instanceof IWorldNameable) {
-            if (((IWorldNameable) holder).hasCustomName()) {
-                final String customName = ((IWorldNameable) holder).getName();
-                final DisplayNameData data = new SpongeDisplayNameData(SpongeTexts.fromLegacy(customName));
-                return Optional.of(data);
-            } else {
-                return Optional.empty();
-            }
+            return Optional.of(new SpongeDisplayNameData(SpongeTexts.fromLegacy(compound.getString(NbtDataUtil.ITEM_DISPLAY_NAME))));
+        } else if (holder instanceof IWorldNameable && ((IWorldNameable) holder).hasCustomName()) {
+            final String customName = ((IWorldNameable) holder).getName();
+            final DisplayNameData data = new SpongeDisplayNameData(SpongeTexts.fromLegacy(customName));
+            return Optional.of(data);
         }
-
         return Optional.empty();
     }
 
@@ -136,9 +129,8 @@ public class DisplayNameDataProcessor extends AbstractSingleDataProcessor<Text, 
                 ((IMixinEntity) holder).setDisplayName(newValue);
                 if (old.isPresent()) {
                     return DataTransactionResult.successReplaceResult(old.get().displayName().asImmutable(), immutableValue);
-                } else {
-                    return DataTransactionResult.successResult(immutableValue);
                 }
+                return DataTransactionResult.successResult(immutableValue);
             } catch (Exception e) {
                 SpongeImpl.getLogger().debug("An exception occurred when setting data: ", e);
                 return DataTransactionResult.errorResult(immutableValue);
@@ -157,9 +149,8 @@ public class DisplayNameDataProcessor extends AbstractSingleDataProcessor<Text, 
             }
             if (prevValue.isPresent()) {
                 return DataTransactionResult.successReplaceResult(prevValue.get().displayName().asImmutable(), immutableValue);
-            } else {
-                return DataTransactionResult.successResult(immutableValue);
             }
+            return DataTransactionResult.successResult(immutableValue);
         }
         return DataTransactionResult.failResult(manipulator.getValues());
     }
@@ -186,9 +177,8 @@ public class DisplayNameDataProcessor extends AbstractSingleDataProcessor<Text, 
                     SpongeImpl.getLogger().error("There was an issue resetting the display name from an Entity!", e);
                     return builder.result(DataTransactionResult.Type.ERROR).build();
                 }
-            } else {
-                return builder.result(DataTransactionResult.Type.SUCCESS).build();
             }
+            return builder.result(DataTransactionResult.Type.SUCCESS).build();
         } else if (holder instanceof ItemStack) {
             final DataTransactionResult.Builder builder = DataTransactionResult.builder();
             final Optional<DisplayNameData> optional = this.from(holder);
@@ -200,9 +190,8 @@ public class DisplayNameDataProcessor extends AbstractSingleDataProcessor<Text, 
                     SpongeImpl.getLogger().error("There was an issue removing the display name from an ItemStack!", e);
                     return builder.result(DataTransactionResult.Type.ERROR).build();
                 }
-            } else {
-                return builder.result(DataTransactionResult.Type.SUCCESS).build();
             }
+            return builder.result(DataTransactionResult.Type.SUCCESS).build();
         }
 
         return DataTransactionResult.failNoData();

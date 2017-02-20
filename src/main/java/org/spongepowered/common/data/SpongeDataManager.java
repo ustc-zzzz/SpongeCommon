@@ -219,11 +219,10 @@ public final class SpongeDataManager implements DataManager {
     @Override
     public <T extends DataSerializable> Optional<T> deserialize(Class<T> clazz, final DataView dataView) {
         final Optional<DataBuilder<T>> optional = getBuilder(clazz);
-        if (optional.isPresent()) {
-            return optional.get().build(dataView);
-        } else {
+        if (!optional.isPresent()) {
             return Optional.empty();
         }
+        return optional.get().build(dataView);
     }
 
     @Override

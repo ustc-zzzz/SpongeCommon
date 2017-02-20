@@ -135,7 +135,9 @@ public final class EntityTypeRegistryModule implements ExtraClassCatalogRegistry
         this.entityTypeMappings.put("husk", newEntityTypeFromName("husk"));
         this.entityTypeMappings.put("slime", newEntityTypeFromName("slime"));
         this.entityTypeMappings.put("ghast", newEntityTypeFromName("ghast"));
+        // TODO: remove when deprecated field EntityTypes#PIG_ZOMBIE is removed
         this.entityTypeMappings.put("pig_zombie", newEntityTypeFromName("zombie_pigman"));
+        this.entityTypeMappings.put("zombie_pigman", newEntityTypeFromName("zombie_pigman"));
         this.entityTypeMappings.put("enderman", newEntityTypeFromName("enderman"));
         this.entityTypeMappings.put("cave_spider", newEntityTypeFromName("cave_spider"));
         this.entityTypeMappings.put("silverfish", newEntityTypeFromName("silverfish"));

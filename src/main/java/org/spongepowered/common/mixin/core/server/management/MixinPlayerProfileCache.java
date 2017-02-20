@@ -241,9 +241,8 @@ public abstract class MixinPlayerProfileCache implements IMixinPlayerProfileCach
         if (profile != null && profile.getName() != null && !profile.getName().isEmpty()) {
             this.addEntry(profile, null);
             return Optional.of((GameProfile) profile);
-        } else {
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 
     @Override
@@ -274,9 +273,8 @@ public abstract class MixinPlayerProfileCache implements IMixinPlayerProfileCach
         Optional<GameProfile> profile = this.getById(uniqueId);
         if (profile.isPresent()) {
             return profile;
-        } else {
-            return this.lookupById(uniqueId);
         }
+        return this.lookupById(uniqueId);
     }
 
     @Override
@@ -338,16 +336,15 @@ public abstract class MixinPlayerProfileCache implements IMixinPlayerProfileCach
         SpongeImpl.getServer().getGameProfileRepository().findProfilesByNames(Iterables.toArray(names, String.class), Agent.MINECRAFT,
                 new MapProfileLookupCallback(result));
 
-        if (!result.isEmpty()) {
-            for (Optional<GameProfile> entry : result.values()) {
-                if (entry.isPresent()) {
-                    this.addEntry((com.mojang.authlib.GameProfile) entry.get(), null);
-                }
-            }
-            return ImmutableMap.copyOf(result);
-        } else {
+        if (result.isEmpty()) {
             return ImmutableMap.of();
         }
+        for (Optional<GameProfile> entry : result.values()) {
+            if (entry.isPresent()) {
+                this.addEntry((com.mojang.authlib.GameProfile) entry.get(), null);
+            }
+        }
+        return ImmutableMap.copyOf(result);
     }
 
     @Override
@@ -355,9 +352,8 @@ public abstract class MixinPlayerProfileCache implements IMixinPlayerProfileCach
         Optional<GameProfile> profile = this.getByName(name);
         if (profile.isPresent()) {
             return profile;
-        } else {
-            return this.lookupByName(name);
         }
+        return this.lookupByName(name);
     }
 
     @Override

@@ -33,13 +33,11 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.immutable.entity.ImmutableFlyingData;
 import org.spongepowered.api.data.manipulator.mutable.entity.FlyingData;
 import org.spongepowered.common.data.manipulator.mutable.entity.SpongeFlyingData;
-import org.spongepowered.common.data.nbt.data.NbtDataProcessor;
 import org.spongepowered.common.data.util.NbtDataUtil;
 
 import java.util.Optional;
 
-public class IsFlyingNbtProcessor extends AbstractSpongeNbtProcessor<FlyingData, ImmutableFlyingData> implements
-        NbtDataProcessor<FlyingData, ImmutableFlyingData> {
+public class IsFlyingNbtProcessor extends AbstractSpongeNbtProcessor<FlyingData, ImmutableFlyingData> {
 
     public IsFlyingNbtProcessor() {
         super(NbtDataTypes.ENTITY);

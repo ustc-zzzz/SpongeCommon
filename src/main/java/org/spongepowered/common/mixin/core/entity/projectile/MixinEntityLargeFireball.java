@@ -61,9 +61,8 @@ public abstract class MixinEntityLargeFireball extends MixinEntityFireball imple
     private Cause getDetonationCause() {
         if (this.detonationCause != null) {
             return this.detonationCause;
-        } else {
-            return Cause.of(NamedCause.of(NamedCause.THROWER, getShooter()));
         }
+        return Cause.of(NamedCause.of(NamedCause.THROWER, getShooter()));
     }
 
     @Redirect(method = "onImpact", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Ljava/lang/String;)Z"))

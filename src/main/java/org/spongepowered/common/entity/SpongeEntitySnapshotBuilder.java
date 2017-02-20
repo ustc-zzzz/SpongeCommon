@@ -120,7 +120,6 @@ public class SpongeEntitySnapshotBuilder extends AbstractDataBuilder<EntitySnaps
         return this;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public SpongeEntitySnapshotBuilder from(Entity entity) {
         reset();
@@ -133,18 +132,17 @@ public class SpongeEntitySnapshotBuilder extends AbstractDataBuilder<EntitySnaps
         this.entityId = entity.getUniqueId();
         this.manipulators = Lists.newArrayList();
         for (DataManipulator<?, ?> manipulator : entity.getContainers()) {
-            addManipulator((ImmutableDataManipulator) manipulator.asImmutable());
+            addManipulator(manipulator.asImmutable());
         }
         this.compound = new NBTTagCompound();
         ((net.minecraft.entity.Entity) entity).writeToNBT(this.compound);
         return this;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public SpongeEntitySnapshotBuilder add(DataManipulator<?, ?> manipulator) {
         checkState(this.entityType != null, "Must have a valid entity type before applying data!");
-        return add((ImmutableDataManipulator) manipulator.asImmutable());
+        return add(manipulator.asImmutable());
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -190,7 +188,6 @@ public class SpongeEntitySnapshotBuilder extends AbstractDataBuilder<EntitySnaps
         this.manipulators.add(manipulator);
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public SpongeEntitySnapshotBuilder from(EntitySnapshot holder) {
         this.entityType = holder.getType();
@@ -207,7 +204,7 @@ public class SpongeEntitySnapshotBuilder extends AbstractDataBuilder<EntitySnaps
         }
         this.manipulators = Lists.newArrayList();
         for (ImmutableDataManipulator<?, ?> manipulator : holder.getContainers()) {
-            add((ImmutableDataManipulator) manipulator);
+            add(manipulator);
         }
         if (holder instanceof SpongeEntitySnapshot) {
             this.compound = ((SpongeEntitySnapshot) holder).getCompound().orElse(null);

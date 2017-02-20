@@ -86,7 +86,7 @@ public class DamageEventHandler {
     public static Function<Double, Double> createResistanceFunction(int resistanceAmplifier) {
         final int base = (resistanceAmplifier + 1) * 5;
         final int modifier = 25 - base;
-        return damage -> -(damage - ((damage.floatValue() * (float) modifier) / 25.0F));
+        return damage -> -(damage - ((damage.floatValue() * modifier) / 25.0F));
     }
 
 
@@ -169,9 +169,8 @@ public class DamageEventHandler {
             }
             if (modifiers.isEmpty()) {
                 return Optional.empty();
-            } else {
-                return Optional.of(modifiers);
             }
+            return Optional.of(modifiers);
         }
         return Optional.empty();
     }
@@ -283,7 +282,7 @@ public class DamageEventHandler {
                             double magicModifier;
                             if (modifier > 0 && modifier <= 20) {
                                 int j = 25 - modifier;
-                                magicModifier = modifierDamage * (float) j;
+                                magicModifier = modifierDamage * j;
                                 modifierDamage = magicModifier / 25.0F;
                             }
                             return - Math.max(actualDamage - modifierDamage, 0.0D);
@@ -303,12 +302,10 @@ public class DamageEventHandler {
                 }
             }
         }
-        if (!modifiers.isEmpty()) {
-            return Optional.of(modifiers);
-        } else {
+        if (modifiers.isEmpty()) {
             return Optional.empty();
         }
-
+        return Optional.of(modifiers);
     }
 
     public static Optional<Tuple<DamageModifier, Function<? super Double, Double>>> createAbsorptionModifier(EntityLivingBase entityLivingBase,

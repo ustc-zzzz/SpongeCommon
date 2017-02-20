@@ -595,10 +595,10 @@ public abstract class MixinNetHandlerPlayServer implements PlayerConnection, IMi
                 // aimed at any entity that is not an armor stand. We shouldn't need the INTERACT packet as the
                 // INTERACT_AT packet contains the same data but also includes a hitVec.
                 return;
-            } else { // queue packet for main thread
-                PacketThreadUtil.checkThreadAndEnqueue(packetIn, (NetHandlerPlayServer) (Object) this, this.player.getServerWorld());
-                return;
             }
+            // queue packet for main thread
+            PacketThreadUtil.checkThreadAndEnqueue(packetIn, (NetHandlerPlayServer) (Object) this, this.player.getServerWorld());
+            return;
         }
 
         WorldServer worldserver = this.serverController.worldServerForDimension(this.player.dimension);

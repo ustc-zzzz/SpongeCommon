@@ -45,7 +45,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 @Mixin(value = net.minecraft.entity.Entity.class, priority = 1111)
-public abstract class MixinEntity_Tracker implements Entity, IMixinEntity {
+public abstract class MixinEntity_Tracker implements IMixinEntity {
 
     private SpongeProfileManager spongeProfileManager;
     private UserStorageService userStorageService;
@@ -83,11 +83,10 @@ public abstract class MixinEntity_Tracker implements Entity, IMixinEntity {
             return Optional.of(this.creator);
         }
         Optional<User> user = getTrackedPlayer(NbtDataUtil.SPONGE_ENTITY_CREATOR);
-        if (user.isPresent()) {
-            return Optional.of(user.get().getUniqueId());
-        } else {
+        if (!user.isPresent()) {
             return Optional.empty();
         }
+        return Optional.of(user.get().getUniqueId());
     }
 
     @Override
@@ -96,11 +95,10 @@ public abstract class MixinEntity_Tracker implements Entity, IMixinEntity {
             return Optional.of(this.notifier);
         }
         Optional<User> user = getTrackedPlayer(NbtDataUtil.SPONGE_ENTITY_NOTIFIER);
-        if (user.isPresent()) {
-            return Optional.of(user.get().getUniqueId());
-        } else {
+        if (!user.isPresent()) {
             return Optional.empty();
         }
+        return Optional.of(user.get().getUniqueId());
     }
 
     @Override
@@ -159,7 +157,6 @@ public abstract class MixinEntity_Tracker implements Entity, IMixinEntity {
         return getTrackedPlayer(NbtDataUtil.SPONGE_ENTITY_NOTIFIER);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Optional<User> getTrackedPlayer(String nbtKey) {
         final UUID uuid = this.getTrackedUniqueId(nbtKey);

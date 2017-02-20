@@ -67,9 +67,8 @@ public abstract class MixinMerchantRecipe implements TradeOffer {
     public Optional<ItemStackSnapshot> getSecondBuyingItem() {
         if (getSecondItemToBuy() == null) {
             return Optional.empty();
-        } else {
-            return Optional.of(((ItemStack) getSecondItemToBuy()).createSnapshot());
         }
+        return Optional.of(((ItemStack) getSecondItemToBuy()).createSnapshot());
     }
 
     @Override

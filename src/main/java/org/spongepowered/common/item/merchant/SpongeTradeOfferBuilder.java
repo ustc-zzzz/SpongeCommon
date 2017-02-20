@@ -41,7 +41,7 @@ import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
 import java.util.Optional;
 
-public class SpongeTradeOfferBuilder extends AbstractDataBuilder<TradeOffer> implements TradeOffer.Builder, DataBuilder<TradeOffer> {
+public class SpongeTradeOfferBuilder extends AbstractDataBuilder<TradeOffer> implements TradeOffer.Builder {
 
     private ItemStackSnapshot firstItem;
     private ItemStackSnapshot secondItem;

@@ -42,8 +42,8 @@ import org.spongepowered.api.data.value.BaseValue;
 import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.common.data.DataProcessor;
-import org.spongepowered.common.data.ValueProcessor;
 import org.spongepowered.common.data.SpongeDataManager;
+import org.spongepowered.common.data.ValueProcessor;
 
 import java.util.Map;
 import java.util.Optional;

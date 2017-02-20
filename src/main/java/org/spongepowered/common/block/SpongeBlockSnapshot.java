@@ -53,7 +53,6 @@ import org.spongepowered.api.data.manipulator.ImmutableDataManipulator;
 import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.value.BaseValue;
 import org.spongepowered.api.data.value.immutable.ImmutableValue;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -62,11 +61,10 @@ import org.spongepowered.common.data.persistence.NbtTranslator;
 import org.spongepowered.common.data.util.DataQueries;
 import org.spongepowered.common.data.util.DataUtil;
 import org.spongepowered.common.data.util.NbtDataUtil;
-import org.spongepowered.common.event.InternalNamedCauses;
+import org.spongepowered.common.event.tracking.CauseTracker;
 import org.spongepowered.common.event.tracking.IPhaseState;
 import org.spongepowered.common.event.tracking.PhaseContext;
 import org.spongepowered.common.event.tracking.phase.block.BlockPhase;
-import org.spongepowered.common.event.tracking.CauseTracker;
 import org.spongepowered.common.interfaces.block.IMixinBlock;
 import org.spongepowered.common.interfaces.world.IMixinWorldServer;
 import org.spongepowered.common.registry.type.block.TileEntityTypeRegistryModule;
@@ -275,11 +273,10 @@ public class SpongeBlockSnapshot implements BlockSnapshot {
         Optional<T> optional = this.blockState.get(containerClass);
         if (optional.isPresent()) {
             return optional;
-        } else {
-            for (ImmutableDataManipulator<?, ?> dataManipulator : this.extraData) {
-                if (containerClass.isInstance(dataManipulator)) {
-                    return Optional.of(((T) dataManipulator));
-                }
+        }
+        for (ImmutableDataManipulator<?, ?> dataManipulator : this.extraData) {
+            if (containerClass.isInstance(dataManipulator)) {
+                return Optional.of(((T) dataManipulator));
             }
         }
         return Optional.empty();
@@ -328,11 +325,10 @@ public class SpongeBlockSnapshot implements BlockSnapshot {
             }
             if (changeState) {
                 return Optional.of(createBuilder().blockState(newState).build());
-            } else {
-                final SpongeBlockSnapshotBuilder builder = createBuilder();
-                builder.add(valueContainer);
-                return Optional.of(builder.build());
             }
+            final SpongeBlockSnapshotBuilder builder = createBuilder();
+            builder.add(valueContainer);
+            return Optional.of(builder.build());
         }
         return Optional.of(createBuilder().add(valueContainer).build());
     }
@@ -477,7 +473,6 @@ public class SpongeBlockSnapshot implements BlockSnapshot {
         return this.compound == null ? Optional.<NBTTagCompound>empty() : Optional.of(this.compound.copy());
     }
 
-    @SuppressWarnings("rawtypes")
     public SpongeBlockSnapshotBuilder createBuilder() {
         final SpongeBlockSnapshotBuilder builder = new SpongeBlockSnapshotBuilder();
         builder.blockState(this.blockState)
@@ -485,7 +480,7 @@ public class SpongeBlockSnapshot implements BlockSnapshot {
             .position(this.pos)
             .worldId(this.worldUniqueId);
         for (ImmutableDataManipulator<?, ?> manipulator : this.extraData) {
-            builder.add((ImmutableDataManipulator) manipulator);
+            builder.add(manipulator);
         }
         if (this.compound != null) {
             builder.unsafeNbt(this.compound);

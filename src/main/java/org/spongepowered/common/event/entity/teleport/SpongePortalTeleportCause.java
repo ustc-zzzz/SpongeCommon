@@ -25,10 +25,9 @@
 package org.spongepowered.common.event.entity.teleport;
 
 import com.google.common.base.Objects;
-import org.spongepowered.api.event.cause.entity.teleport.PortalTeleportCause;
 import org.spongepowered.api.event.cause.entity.teleport.common.AbstractPortalTeleportCause;
 
-public class SpongePortalTeleportCause extends AbstractPortalTeleportCause implements PortalTeleportCause {
+public class SpongePortalTeleportCause extends AbstractPortalTeleportCause {
 
     public SpongePortalTeleportCause(SpongePortalTeleportCauseBuilder builder) {
         super(builder);

@@ -34,6 +34,7 @@ import org.spongepowered.api.data.type.HorseVariant;
 import org.spongepowered.api.text.translation.Translation;
 import org.spongepowered.common.text.translation.SpongeTranslation;
 
+@SuppressWarnings("deprecation")
 public class SpongeHorseVariant extends SpongeEntityMeta implements HorseVariant {
 
     private final Class<? extends AbstractHorse> type;

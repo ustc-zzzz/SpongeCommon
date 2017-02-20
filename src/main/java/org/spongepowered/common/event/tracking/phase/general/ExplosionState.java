@@ -30,7 +30,6 @@ import com.flowpowered.math.vector.Vector3i;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;

@@ -24,7 +24,6 @@
  */
 package org.spongepowered.common.data.processor.value.entity;
 
-import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.passive.EntityDonkey;
 import net.minecraft.entity.passive.EntityHorse;
@@ -39,13 +38,12 @@ import org.spongepowered.api.data.value.ValueContainer;
 import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.common.data.processor.common.AbstractSpongeValueProcessor;
-import org.spongepowered.common.data.processor.common.HorseUtils;
 import org.spongepowered.common.data.value.immutable.ImmutableSpongeValue;
 import org.spongepowered.common.data.value.mutable.SpongeValue;
-import org.spongepowered.common.entity.SpongeHorseVariant;
 
 import java.util.Optional;
 
+@SuppressWarnings("deprecation")
 public class HorseVariantValueProcessor extends AbstractSpongeValueProcessor<AbstractHorse, HorseVariant, Value<HorseVariant>> {
 
     public HorseVariantValueProcessor() {

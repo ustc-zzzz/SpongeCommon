@@ -236,26 +236,22 @@ public class SpongeGameRegistry implements GameRegistry {
         return classModule.getForClass(clazz);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T extends CatalogType> Optional<T> getType(Class<T> typeClass, String id) {
         CatalogRegistryModule<T> registryModule = getRegistryModuleFor(typeClass).orElse(null);
         if (registryModule == null) {
             return Optional.empty();
-        } else {
-            return registryModule.getById(id.toLowerCase(Locale.ENGLISH));
         }
+        return registryModule.getById(id.toLowerCase(Locale.ENGLISH));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T extends CatalogType> Collection<T> getAllOf(Class<T> typeClass) {
         CatalogRegistryModule<T> registryModule = getRegistryModuleFor(typeClass).orElse(null);
         if (registryModule == null) {
             return Collections.emptyList();
-        } else {
-            return registryModule.getAll();
         }
+        return registryModule.getAll();
     }
 
     @Override
@@ -264,15 +260,14 @@ public class SpongeGameRegistry implements GameRegistry {
         final CatalogRegistryModule<T> registryModule = getRegistryModuleFor(typeClass).orElse(null);
         if (registryModule == null) {
             return Collections.emptyList();
-        } else {
-            ImmutableList.Builder<T> builder = ImmutableList.builder();
-            registryModule.getAll()
-                    .stream()
-                    .filter(type -> pluginId.equals(type.getId().split(":")[0]))
-                    .forEach(builder::add);
-
-            return builder.build();
         }
+        ImmutableList.Builder<T> builder = ImmutableList.builder();
+        registryModule.getAll()
+                .stream()
+                .filter(type -> pluginId.equals(type.getId().split(":")[0]))
+                .forEach(builder::add);
+
+        return builder.build();
     }
 
     @SuppressWarnings("unchecked")
@@ -286,24 +281,22 @@ public class SpongeGameRegistry implements GameRegistry {
         return (T) supplier.get();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T extends CatalogType> T register(Class<T> type, T obj) throws IllegalArgumentException, UnsupportedOperationException {
         CatalogRegistryModule<T> registryModule = getRegistryModuleFor(type).orElse(null);
         if (registryModule == null) {
             throw new UnsupportedOperationException("Failed to find a RegistryModule for that type");
-        } else {
-            if (registryModule instanceof SpongeAdditionalCatalogRegistryModule) {
-                if(((SpongeAdditionalCatalogRegistryModule<T>) registryModule).allowsApiRegistration()) {
-                    ((SpongeAdditionalCatalogRegistryModule<T>) registryModule).registerAdditionalCatalog(obj);
-                    return obj;
-                }
-            } else if (registryModule instanceof AdditionalCatalogRegistryModule) {
-                ((AdditionalCatalogRegistryModule<T>) registryModule).registerAdditionalCatalog(obj);
+        }
+        if (registryModule instanceof SpongeAdditionalCatalogRegistryModule) {
+            if(((SpongeAdditionalCatalogRegistryModule<T>) registryModule).allowsApiRegistration()) {
+                ((SpongeAdditionalCatalogRegistryModule<T>) registryModule).registerAdditionalCatalog(obj);
                 return obj;
             }
-            throw new UnsupportedOperationException("This catalog type does not support additional registration");
+        } else if (registryModule instanceof AdditionalCatalogRegistryModule) {
+            ((AdditionalCatalogRegistryModule<T>) registryModule).registerAdditionalCatalog(obj);
+            return obj;
         }
+        throw new UnsupportedOperationException("This catalog type does not support additional registration");
     }
 
     @Override
@@ -438,7 +431,6 @@ public class SpongeGameRegistry implements GameRegistry {
         return SpongeVillagerRegistry.getInstance();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public TextSerializerFactory getTextSerializerFactory() {
         return SpongeTextSerializerFactory.INSTANCE;

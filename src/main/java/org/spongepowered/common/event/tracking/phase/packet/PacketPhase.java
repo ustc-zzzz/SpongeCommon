@@ -459,9 +459,8 @@ public final class PacketPhase extends TrackingPhase {
             final MinecraftServer server = SpongeImpl.getServer();
             if (blockPos.getY() < server.getBuildLimit() - 1 || front != EnumFacing.UP && blockPos.getY() < server.getBuildLimit()) {
                 return General.PLACE_BLOCK;
-            } else {
-                return General.INVALID;
             }
+            return General.INVALID;
         });
         this.packetTranslationMap.put(CPacketPlayerTryUseItem.class, packet -> General.USE_ITEM);
         this.packetTranslationMap.put(CPacketHeldItemChange.class, packet -> Inventory.SWITCH_HOTBAR_SCROLL);

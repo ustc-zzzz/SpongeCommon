@@ -72,9 +72,8 @@ public class DataUtil {
     public static DataView checkDataExists(final DataView dataView, final DataQuery query) throws InvalidDataException {
         if (!checkNotNull(dataView).contains(checkNotNull(query))) {
             throw new InvalidDataException("Missing data for query: " + query.asString('.'));
-        } else {
-            return dataView;
         }
+        return dataView;
     }
 
     public static <T> T getData(final DataView dataView, final Key<? extends BaseValue<T>> key) throws InvalidDataException {
@@ -88,9 +87,8 @@ public class DataUtil {
         final Object object = dataView.get(key.getQuery()).get();
         if (clazz.isInstance(object)) {
             return (T) object;
-        } else {
-            throw new InvalidDataException("Could not cast to the correct class type!");
         }
+        throw new InvalidDataException("Could not cast to the correct class type!");
     }
 
     public static <T> T getData(final DataView dataView, final DataQuery query, Class<T> data) throws InvalidDataException {
@@ -98,9 +96,8 @@ public class DataUtil {
         final Object object = dataView.get(query).get();
         if (data.isInstance(object)) {
             return (T) object;
-        } else {
-            throw new InvalidDataException("Data does not match!");
         }
+        throw new InvalidDataException("Data does not match!");
     }
 
     public static List<DataView> getSerializedManipulatorList(Iterable<DataManipulator<?, ?>> manipulators) {
@@ -181,9 +178,8 @@ public class DataUtil {
         final double z = view.getDouble(Queries.POSITION_Z).get();
         if (castToInt) {
             return new Location<>(SpongeImpl.getGame().getServer().getWorld(worldUuid).get(), (int) x, (int) y, (int) z);
-        } else {
-            return new Location<>(SpongeImpl.getGame().getServer().getWorld(worldUuid).get(), x, y, z);
         }
+        return new Location<>(SpongeImpl.getGame().getServer().getWorld(worldUuid).get(), x, y, z);
 
     }
 

@@ -47,7 +47,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.common.event.tracking.CauseTracker;
 import org.spongepowered.common.interfaces.world.IMixinLocation;
 import org.spongepowered.common.interfaces.world.IMixinTeleporter;
 import org.spongepowered.common.interfaces.world.IMixinWorldServer;
@@ -143,9 +142,8 @@ public class MixinTeleporter implements PortalAgent, IMixinTeleporter {
         if (!foundTeleporter.isPresent()) {
             if (this.createPortal(targetLocation).isPresent()) {
                 return this.findPortal(targetLocation);
-            } else {
-                return Optional.empty();
             }
+            return Optional.empty();
         }
 
         return foundTeleporter;
@@ -227,9 +225,8 @@ public class MixinTeleporter implements PortalAgent, IMixinTeleporter {
             }
 
             return Optional.of(new Location<World>(searchLocation.getExtent(), VecHelper.toVector3d(portalPosition)));
-        } else {
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 
     private void handleEntityPortalExit(Entity entityIn, Location<World> portalLocation, float rotationYaw) {
@@ -307,8 +304,8 @@ public class MixinTeleporter implements PortalAgent, IMixinTeleporter {
 
     // Adds boolean to turn on special tracking if called from API
     public Optional<Location<World>> createTeleporter(Location<World> nearLocation, boolean plugin) {
-        IMixinWorldServer spongeWorld = (IMixinWorldServer) nearLocation.getExtent();
-        final CauseTracker causeTracker = spongeWorld.getCauseTracker();
+//        IMixinWorldServer spongeWorld = (IMixinWorldServer) nearLocation.getExtent();
+//        final CauseTracker causeTracker = spongeWorld.getCauseTracker();
 //        if (plugin) {
 //            Cause teleportCause = Cause.of(NamedCause.source(this));
 //            if (causeTracker.getCurrentCause() != null) {

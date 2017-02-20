@@ -57,7 +57,6 @@ import org.spongepowered.api.util.TextMessageException;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.common.SpongeImpl;
-import org.spongepowered.common.event.InternalNamedCauses;
 import org.spongepowered.common.event.tracking.CauseTracker;
 import org.spongepowered.common.event.tracking.PhaseContext;
 import org.spongepowered.common.event.tracking.phase.general.GeneralPhase;
@@ -122,7 +121,6 @@ public class SpongeCommandManager implements CommandManager {
         return register(plugin, callable, aliases, Function.identity());
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Optional<CommandMapping> register(Object plugin, CommandCallable callable, List<String> aliases,
             Function<List<String>, List<String>> callback) {
@@ -280,7 +278,6 @@ public class SpongeCommandManager implements CommandManager {
         try {
             try {
                 if (CauseTracker.ENABLED && SpongeImpl.getServer().isCallingFromMinecraftThread()) {
-                    final String commandUsed = commandLine;
                     Sponge.getServer().getWorlds().forEach(world -> {
                         final IMixinWorldServer mixinWorld = (IMixinWorldServer) world;
                         mixinWorld.getCauseTracker().switchToPhase(GeneralPhase.State.COMMAND, PhaseContext.start()
@@ -358,9 +355,8 @@ public class SpongeCommandManager implements CommandManager {
             Sponge.getGame().getEventManager().post(event);
             if (event.isCancelled()) {
                 return ImmutableList.of();
-            } else {
-                return ImmutableList.copyOf(event.getTabCompletions());
             }
+            return ImmutableList.copyOf(event.getTabCompletions());
         } catch (Exception e) {
             if (e instanceof CommandException) {
                 src.sendMessage(error(t("Error getting suggestions: %s", ((CommandException) e).getText())));

@@ -24,7 +24,6 @@
  */
 package org.spongepowered.common.data.manipulator.immutable.item;
 
-import com.google.common.collect.ComparisonChain;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.MemoryDataContainer;
 import org.spongepowered.api.data.key.Keys;
@@ -35,7 +34,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.common.data.manipulator.immutable.common.AbstractImmutableSingleData;
 import org.spongepowered.common.data.manipulator.mutable.item.SpongeAuthorData;
-import org.spongepowered.common.data.util.DataConstants;
 import org.spongepowered.common.data.value.immutable.ImmutableSpongeValue;
 
 public class ImmutableSpongeAuthorData extends AbstractImmutableSingleData<Text, ImmutableAuthorData, AuthorData> implements ImmutableAuthorData {

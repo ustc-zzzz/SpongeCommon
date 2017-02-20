@@ -470,36 +470,33 @@ public final class CauseTracker {
         {
             return false;
         }
-        else
+        if (newState.getLightOpacity() != iblockstate.getLightOpacity() || newState.getLightValue() != iblockstate.getLightValue())
         {
-            if (newState.getLightOpacity() != iblockstate.getLightOpacity() || newState.getLightValue() != iblockstate.getLightValue())
-            {
-                minecraftWorld.profiler.startSection("checkLight");
-                minecraftWorld.checkLight(pos);
-                minecraftWorld.profiler.endSection();
-            }
-
-            if ((flags & 2) != 0 && (!minecraftWorld.isRemote || (flags & 4) == 0) && chunk.isPopulated())
-            {
-                minecraftWorld.notifyBlockUpdate(pos, iblockstate, newState, flags);
-            }
-
-            if (!minecraftWorld.isRemote && (flags & 1) != 0)
-            {
-                minecraftWorld.notifyNeighborsRespectDebug(pos, iblockstate.getBlock(), true);
-
-                if (newState.hasComparatorInputOverride())
-                {
-                    minecraftWorld.updateComparatorOutputLevel(pos, block);
-                }
-            }
-            else if (!minecraftWorld.isRemote && (flags & 16) == 0)
-            {
-                minecraftWorld.updateObservingBlocksAt(pos, block);
-            }
-
-            return true;
+            minecraftWorld.profiler.startSection("checkLight");
+            minecraftWorld.checkLight(pos);
+            minecraftWorld.profiler.endSection();
         }
+
+        if ((flags & 2) != 0 && (!minecraftWorld.isRemote || (flags & 4) == 0) && chunk.isPopulated())
+        {
+            minecraftWorld.notifyBlockUpdate(pos, iblockstate, newState, flags);
+        }
+
+        if (!minecraftWorld.isRemote && (flags & 1) != 0)
+        {
+            minecraftWorld.notifyNeighborsRespectDebug(pos, iblockstate.getBlock(), true);
+
+            if (newState.hasComparatorInputOverride())
+            {
+                minecraftWorld.updateComparatorOutputLevel(pos, block);
+            }
+        }
+        else if (!minecraftWorld.isRemote && (flags & 16) == 0)
+        {
+            minecraftWorld.updateObservingBlocksAt(pos, block);
+        }
+
+        return true;
     }
 
     public boolean setBlockStateWithFlag(BlockPos pos, IBlockState newState, BlockChangeFlag flag) {
@@ -581,75 +578,74 @@ public final class CauseTracker {
 
         if (!isForced && !getMixinWorld().isMinecraftChunkLoaded(chunkX, chunkZ, true)) {
             return false;
-        } else {
-            if (minecraftEntity instanceof EntityPlayer) {
-                EntityPlayer entityplayer = (EntityPlayer) minecraftEntity;
-                minecraftWorld.playerEntities.add(entityplayer);
-                minecraftWorld.updateAllPlayersSleepingFlag();
-                SpongeImplHooks.firePlayerJoinSpawnEvent((EntityPlayerMP) entityplayer);
-            } else {
-                // Sponge start - check for vanilla owner
-                if (minecraftEntity instanceof EntityTameable) {
-                    EntityTameable tameable = (EntityTameable) entity;
-                    EntityLivingBase owner = tameable.getOwner();
-                    if (owner != null) {
-                        User user = null;
-                        if (!(owner instanceof EntityPlayer)) {
-                            user = ((IMixinEntity) owner).getCreatorUser().orElse(null);
-                        } else {
-                           user = (User) owner;
-                        }
-                        if (user != null) {
-                            context.owner = user;
-                            entity.setCreator(user.getUniqueId());
-                        }
-                    }
-                } else if (minecraftEntity instanceof EntityThrowable) {
-                    EntityThrowable throwable = (EntityThrowable) minecraftEntity;
-                    EntityLivingBase thrower = throwable.getThrower();
-                    if (thrower != null) {
-                        User user = null;
-                        if (!(thrower instanceof EntityPlayer)) {
-                            user = ((IMixinEntity) thrower).getCreatorUser().orElse(null);
-                        } else {
-                            user = (User) thrower;
-                        }
-                        if (user != null) {
-                            context.owner = user;
-                            entity.setCreator(user.getUniqueId());
-                        }
-                    }
-                }
-                // Sponge end
-            }
-            // Sponge Start
-            // First, check if the owning world is a remote world. Then check if the spawn is forced.
-            // Finally, if all checks are true, then let the phase process the entity spawn. Most phases
-            // will not actively capture entity spawns, but will still throw events for them. Some phases
-            // capture all entities until the phase is marked for completion.
-            if (!isForced) {
-                try {
-                    return phase.spawnEntityOrCapture(this, phaseState, context, entity, chunkX, chunkZ);
-                } catch (Exception e) {
-                    // Just in case something really happened, we should print a nice exception for people to
-                    // paste us
-                    final PrettyPrinter printer = new PrettyPrinter(60).add("Exception attempting to capture or spawn an Entity!").centre().hr();
-                    printer.addWrapped(40, "%s :", "PhaseContext");
-                    CONTEXT_PRINTER.accept(printer, context);
-                    printer.addWrapped(60, "%s :", "Phases remaining");
-                    this.stack.forEach(data -> PHASE_PRINTER.accept(printer, data));
-                    printer.add("Stacktrace:");
-                    printer.add(e);
-                    printer.trace(System.err, SpongeImpl.getLogger(), Level.TRACE);
-                    return false;
-                }
-            }
-            // Sponge end - continue on with the checks.
-            minecraftWorld.getChunkFromChunkCoords(chunkX, chunkZ).addEntity(minecraftEntity);
-            minecraftWorld.loadedEntityList.add(minecraftEntity);
-            getMixinWorld().onSpongeEntityAdded(minecraftEntity); // Sponge - Cannot add onEntityAdded to the access transformer because forge makes it public
-            return true;
         }
+        if (minecraftEntity instanceof EntityPlayer) {
+            EntityPlayer entityplayer = (EntityPlayer) minecraftEntity;
+            minecraftWorld.playerEntities.add(entityplayer);
+            minecraftWorld.updateAllPlayersSleepingFlag();
+            SpongeImplHooks.firePlayerJoinSpawnEvent((EntityPlayerMP) entityplayer);
+        } else {
+            // Sponge start - check for vanilla owner
+            if (minecraftEntity instanceof EntityTameable) {
+                EntityTameable tameable = (EntityTameable) entity;
+                EntityLivingBase owner = tameable.getOwner();
+                if (owner != null) {
+                    User user = null;
+                    if (!(owner instanceof EntityPlayer)) {
+                        user = ((IMixinEntity) owner).getCreatorUser().orElse(null);
+                    } else {
+                       user = (User) owner;
+                    }
+                    if (user != null) {
+                        context.owner = user;
+                        entity.setCreator(user.getUniqueId());
+                    }
+                }
+            } else if (minecraftEntity instanceof EntityThrowable) {
+                EntityThrowable throwable = (EntityThrowable) minecraftEntity;
+                EntityLivingBase thrower = throwable.getThrower();
+                if (thrower != null) {
+                    User user = null;
+                    if (!(thrower instanceof EntityPlayer)) {
+                        user = ((IMixinEntity) thrower).getCreatorUser().orElse(null);
+                    } else {
+                        user = (User) thrower;
+                    }
+                    if (user != null) {
+                        context.owner = user;
+                        entity.setCreator(user.getUniqueId());
+                    }
+                }
+            }
+            // Sponge end
+        }
+        // Sponge Start
+        // First, check if the owning world is a remote world. Then check if the spawn is forced.
+        // Finally, if all checks are true, then let the phase process the entity spawn. Most phases
+        // will not actively capture entity spawns, but will still throw events for them. Some phases
+        // capture all entities until the phase is marked for completion.
+        if (!isForced) {
+            try {
+                return phase.spawnEntityOrCapture(this, phaseState, context, entity, chunkX, chunkZ);
+            } catch (Exception e) {
+                // Just in case something really happened, we should print a nice exception for people to
+                // paste us
+                final PrettyPrinter printer = new PrettyPrinter(60).add("Exception attempting to capture or spawn an Entity!").centre().hr();
+                printer.addWrapped(40, "%s :", "PhaseContext");
+                CONTEXT_PRINTER.accept(printer, context);
+                printer.addWrapped(60, "%s :", "Phases remaining");
+                this.stack.forEach(data -> PHASE_PRINTER.accept(printer, data));
+                printer.add("Stacktrace:");
+                printer.add(e);
+                printer.trace(System.err, SpongeImpl.getLogger(), Level.TRACE);
+                return false;
+            }
+        }
+        // Sponge end - continue on with the checks.
+        minecraftWorld.getChunkFromChunkCoords(chunkX, chunkZ).addEntity(minecraftEntity);
+        minecraftWorld.loadedEntityList.add(minecraftEntity);
+        getMixinWorld().onSpongeEntityAdded(minecraftEntity); // Sponge - Cannot add onEntityAdded to the access transformer because forge makes it public
+        return true;
     }
 
     /**
@@ -678,23 +674,21 @@ public final class CauseTracker {
 
         if (!isForced && !getMixinWorld().isMinecraftChunkLoaded(chunkX, chunkZ, true)) {
             return false;
-        } else {
-
-            // Sponge Start - throw an event
-            final List<Entity> entities = new ArrayList<>(1); // We need to use an arraylist so that filtering will work.
-            entities.add(entity);
-
-            final SpawnEntityEvent.Custom
-                    event =
-                    SpongeEventFactory.createSpawnEntityEventCustom(cause, entities, getWorld());
-            SpongeImpl.postEvent(event);
-            if (entity instanceof EntityPlayer || !event.isCancelled()) {
-                getMixinWorld().forceSpawnEntity(entity);
-            }
-            // Sponge end
-
-            return true;
         }
+        // Sponge Start - throw an event
+        final List<Entity> entities = new ArrayList<>(1); // We need to use an arraylist so that filtering will work.
+        entities.add(entity);
+
+        final SpawnEntityEvent.Custom
+                event =
+                SpongeEventFactory.createSpawnEntityEventCustom(cause, entities, getWorld());
+        SpongeImpl.postEvent(event);
+        if (entity instanceof EntityPlayer || !event.isCancelled()) {
+            getMixinWorld().forceSpawnEntity(entity);
+        }
+        // Sponge end
+
+        return true;
     }
 
 }

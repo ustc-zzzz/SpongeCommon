@@ -89,7 +89,7 @@ public class SpongePlayerData implements DataSerializable {
                 .set(DataQueries.PLAYER_DATA_LAST, this.lastJoined);
     }
 
-    public static final class Builder extends AbstractDataBuilder<SpongePlayerData> implements DataBuilder<SpongePlayerData> {
+    public static final class Builder extends AbstractDataBuilder<SpongePlayerData> {
 
         public Builder() {
             super(SpongePlayerData.class, 1);

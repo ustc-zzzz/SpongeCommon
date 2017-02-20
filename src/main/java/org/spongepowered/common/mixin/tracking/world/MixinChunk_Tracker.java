@@ -104,16 +104,15 @@ public abstract class MixinChunk_Tracker implements Chunk, IMixinChunk {
     public void addTrackedBlockPosition(Block block, BlockPos pos, User user, PlayerTracker.Type trackerType) {
         if (this.world.isRemote) {
             return;
-        } else {
-            IMixinWorldServer spongeWorld = (IMixinWorldServer) this.world;
-            if (spongeWorld.getCauseTracker().getCurrentState().ignoresBlockTracking()) {
-                // Don't track chunk gen
-                return;
-            }
-            // Don't track fake players
-            if (user instanceof EntityPlayerMP && SpongeImplHooks.isFakePlayer((EntityPlayerMP) user)) {
-                return;
-            }
+        }
+        IMixinWorldServer spongeWorld = (IMixinWorldServer) this.world;
+        if (spongeWorld.getCauseTracker().getCurrentState().ignoresBlockTracking()) {
+            // Don't track chunk gen
+            return;
+        }
+        // Don't track fake players
+        if (user instanceof EntityPlayerMP && SpongeImplHooks.isFakePlayer((EntityPlayerMP) user)) {
+            return;
         }
 
         if (!SpongeHooks.getActiveConfig((WorldServer) this.world).getConfig().getBlockTracking().getBlockBlacklist().contains(((BlockType) block).getId())) {

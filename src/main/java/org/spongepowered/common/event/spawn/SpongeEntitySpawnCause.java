@@ -25,10 +25,9 @@
 package org.spongepowered.common.event.spawn;
 
 import com.google.common.base.Objects;
-import org.spongepowered.api.event.cause.entity.spawn.EntitySpawnCause;
 import org.spongepowered.api.event.cause.entity.spawn.common.AbstractEntitySpawnCause;
 
-public class SpongeEntitySpawnCause extends AbstractEntitySpawnCause implements EntitySpawnCause {
+public class SpongeEntitySpawnCause extends AbstractEntitySpawnCause {
 
     public SpongeEntitySpawnCause(SpongeEntitySpawnCauseBuilder builder) {
         super(builder);

@@ -38,7 +38,6 @@ import org.spongepowered.api.data.manipulator.mutable.entity.ZombieData;
 import org.spongepowered.api.data.type.Profession;
 import org.spongepowered.api.data.type.ZombieType;
 import org.spongepowered.api.data.type.ZombieTypes;
-import org.spongepowered.api.entity.living.monster.Zombie;
 import org.spongepowered.common.data.manipulator.mutable.entity.SpongeZombieData;
 import org.spongepowered.common.data.processor.common.AbstractEntityDataProcessor;
 import org.spongepowered.common.entity.EntityUtil;
@@ -59,7 +58,6 @@ public class ZombieDataProcessor
         return true;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected boolean set(EntityZombie dataHolder, Map<Key<?>, Object> keyValues) {
         throw new UnsupportedOperationException("ZombieData is deprecated - zombie types are now separate entities!");

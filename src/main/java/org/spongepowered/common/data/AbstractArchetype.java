@@ -153,7 +153,6 @@ public abstract class AbstractArchetype<C extends CatalogType, S extends Locatab
         return offer(valueContainer, function);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public DataTransactionResult remove(Class<? extends DataManipulator<?, ?>> containerClass) {
         return SpongeDataManager.getInstance().getRawNbtProcessor(this.getDataType(), containerClass)
@@ -197,7 +196,6 @@ public abstract class AbstractArchetype<C extends CatalogType, S extends Locatab
                 .collect(Collectors.toList());
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <E> Optional<E> get(Key<? extends BaseValue<E>> key) {
         return SpongeDataManager.getInstance().getNbtProcessor(this.getDataType(), key)
@@ -217,7 +215,6 @@ public abstract class AbstractArchetype<C extends CatalogType, S extends Locatab
                 .orElse(true); // we want to say we automatically support custom data
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<Key<?>> getKeys() {
         return SpongeDataManager.getInstance().getNbtValueProcessors(this.getDataType()).stream()

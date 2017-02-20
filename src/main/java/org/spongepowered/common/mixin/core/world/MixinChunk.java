@@ -1075,9 +1075,8 @@ public abstract class MixinChunk implements Chunk, IMixinChunk, IMixinCachable {
         if (neighbor != null) {
             if (secondary != Direction.NONE) {
                 return neighbor.getNeighbor(secondary, shouldLoad);
-            } else {
-                return Optional.of(neighbor);
             }
+            return Optional.of(neighbor);
         }
 
         return Optional.empty();

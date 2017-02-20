@@ -38,10 +38,10 @@ import org.spongepowered.common.data.processor.common.AbstractSpongeValueProcess
 import org.spongepowered.common.data.util.DataConstants;
 import org.spongepowered.common.data.value.immutable.ImmutableSpongeValue;
 import org.spongepowered.common.data.value.mutable.SpongeValue;
-import org.spongepowered.common.entity.EntityUtil;
 
 import java.util.Optional;
 
+@SuppressWarnings("deprecation")
 public class ZombieTypeValueProcessor extends AbstractSpongeValueProcessor<EntityZombie, ZombieType, Value<ZombieType>> {
 
     public ZombieTypeValueProcessor() {

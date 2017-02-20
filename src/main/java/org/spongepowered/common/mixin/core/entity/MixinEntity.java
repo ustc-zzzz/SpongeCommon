@@ -425,11 +425,10 @@ public abstract class MixinEntity implements IMixinEntity {
         MoveEntityEvent.Teleport event = EntityUtil.handleDisplaceEntityTeleportEvent((net.minecraft.entity.Entity) (Object) this, location);
         if (event.isCancelled()) {
             return false;
-        } else {
-            location = event.getToTransform().getLocation();
-            this.rotationPitch = (float) event.getToTransform().getPitch();
-            this.rotationYaw = (float) event.getToTransform().getYaw();
         }
+        location = event.getToTransform().getLocation();
+        this.rotationPitch = (float) event.getToTransform().getPitch();
+        this.rotationYaw = (float) event.getToTransform().getYaw();
 
         IMixinChunkProviderServer chunkProviderServer = (IMixinChunkProviderServer) ((WorldServer) this.world).getChunkProvider();
         chunkProviderServer.setForceChunkRequests(true);

@@ -26,7 +26,6 @@ package org.spongepowered.common.registry.type.economy;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import org.spongepowered.api.registry.CatalogRegistryModule;
 import org.spongepowered.api.registry.util.RegisterCatalog;
 import org.spongepowered.api.service.economy.transaction.TransactionType;
 import org.spongepowered.api.service.economy.transaction.TransactionTypes;
@@ -39,7 +38,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
-public class TransactionTypeRegistryModule implements CatalogRegistryModule<TransactionType>, SpongeAdditionalCatalogRegistryModule<TransactionType> {
+public class TransactionTypeRegistryModule implements SpongeAdditionalCatalogRegistryModule<TransactionType> {
 
     @RegisterCatalog(TransactionTypes.class)
     public final Map<String, TransactionType> transactionTypeMappings = new HashMap<>();

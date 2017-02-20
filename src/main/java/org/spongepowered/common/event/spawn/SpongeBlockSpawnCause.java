@@ -25,10 +25,9 @@
 package org.spongepowered.common.event.spawn;
 
 import com.google.common.base.Objects;
-import org.spongepowered.api.event.cause.entity.spawn.BlockSpawnCause;
 import org.spongepowered.api.event.cause.entity.spawn.common.AbstractBlockSpawnCause;
 
-public class SpongeBlockSpawnCause extends AbstractBlockSpawnCause implements BlockSpawnCause {
+public class SpongeBlockSpawnCause extends AbstractBlockSpawnCause {
 
     public SpongeBlockSpawnCause(SpongeBlockSpawnCauseBuilder builder) {
         super(builder);

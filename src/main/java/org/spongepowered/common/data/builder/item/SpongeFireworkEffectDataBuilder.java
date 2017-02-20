@@ -26,26 +26,23 @@ package org.spongepowered.common.data.builder.item;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataView;
-import org.spongepowered.api.data.Queries;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
-import org.spongepowered.api.data.persistence.DataBuilder;
-import org.spongepowered.api.data.persistence.DataContentUpdater;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.item.FireworkEffect;
 import org.spongepowered.api.item.FireworkShape;
 import org.spongepowered.api.util.Color;
-import org.spongepowered.common.data.SpongeDataManager;
 import org.spongepowered.common.data.util.DataQueries;
 import org.spongepowered.common.data.util.DataUtil;
 
 import java.util.List;
 import java.util.Optional;
 
-public class SpongeFireworkEffectDataBuilder extends AbstractDataBuilder<FireworkEffect> implements DataBuilder<FireworkEffect> {
+public class SpongeFireworkEffectDataBuilder extends AbstractDataBuilder<FireworkEffect> {
+
     private final static int SUPPORTED_VERSION = 1;
 
     public SpongeFireworkEffectDataBuilder() {
-        super(FireworkEffect.class, 1);
+        super(FireworkEffect.class, SUPPORTED_VERSION);
     }
 
     @Override

@@ -27,7 +27,6 @@ package org.spongepowered.common.data.manipulator.mutable;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ComparisonChain;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.immutable.ImmutableMobSpawnerData;
@@ -220,7 +219,7 @@ public class SpongeMobSpawnerData extends AbstractData<MobSpawnerData, Immutable
         registerFieldGetter(Keys.SPAWNER_SPAWN_COUNT, () -> this.count);
         registerFieldGetter(Keys.SPAWNER_MAXIMUM_NEARBY_ENTITIES, () -> this.maximumEntities);
         registerFieldGetter(Keys.SPAWNER_REQUIRED_PLAYER_RANGE, () -> this.playerRange);
-        registerFieldGetter(Keys.SPAWNER_SPAWN_RANGE, () -> spawnRange);
+        registerFieldGetter(Keys.SPAWNER_SPAWN_RANGE, () -> this.spawnRange);
         registerFieldGetter(Keys.SPAWNER_NEXT_ENTITY_TO_SPAWN, () -> this.nextEntityToSpawn);
         registerFieldGetter(Keys.SPAWNER_ENTITIES, () -> this.entities);
 

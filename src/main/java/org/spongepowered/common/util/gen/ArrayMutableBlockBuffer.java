@@ -304,9 +304,8 @@ public class ArrayMutableBlockBuffer extends AbstractBlockBuffer implements Muta
                 // The entry is split between two longs
                 int bitsInLeft = Long.SIZE - bitOffset;
                 return (int) ((this.longArray[longIndex] >>> bitOffset | this.longArray[rightLongIndex] << bitsInLeft) & this.maxValue);
-            } else {
-                return (int) (this.longArray[longIndex] >>> bitOffset & this.maxValue);
             }
+            return (int) (this.longArray[longIndex] >>> bitOffset & this.maxValue);
         }
 
         @Override

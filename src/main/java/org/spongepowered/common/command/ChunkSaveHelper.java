@@ -51,13 +51,10 @@ public class ChunkSaveHelper {
 
     @SuppressWarnings("rawtypes")
     public static void writeChunks(File file, boolean logAll) {
-        try {
-            if (file.getParentFile() != null) {
-                file.getParentFile().mkdirs();
-            }
-
-            FileWriter fileWriter = new FileWriter(file);
-            JsonWriter writer = new JsonWriter(fileWriter);
+        if (file.getParentFile() != null) {
+            file.getParentFile().mkdirs();
+        }
+        try (JsonWriter writer = new JsonWriter(new FileWriter(file))) {
             writer.setIndent("  ");
             writer.beginArray();
 
@@ -133,8 +130,6 @@ public class ChunkSaveHelper {
                 writer.endObject(); // Dimension
             }
             writer.endArray(); // Dimensions
-            writer.close();
-            fileWriter.close();
         } catch (Throwable throwable) {
             SpongeImpl.getLogger().error("Could not save chunk info report to " + file);
         }

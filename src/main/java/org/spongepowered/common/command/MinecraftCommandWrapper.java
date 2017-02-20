@@ -39,7 +39,6 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandPermissionException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.InvocationCommandException;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.Text;
@@ -51,7 +50,6 @@ import org.spongepowered.common.interfaces.command.IMixinCommandHandler;
 import org.spongepowered.common.text.translation.SpongeTranslation;
 import org.spongepowered.common.util.VecHelper;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,6 +58,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+
+import javax.annotation.Nullable;
 
 /**
  * Wrapper around ICommands so they fit into the Sponge command system.
@@ -113,7 +113,6 @@ public class MinecraftCommandWrapper implements CommandCallable {
         // Below this is copied from CommandHandler.execute. This might need to be updated between versions.
         int affectedEntities = 1;
         if (usernameIndex > -1) {
-            @SuppressWarnings("unchecked")
             List<Entity> list = null;
             try {
                 list = EntitySelector.matchEntities(mcSender, splitArgs[usernameIndex], Entity.class);
@@ -160,7 +159,7 @@ public class MinecraftCommandWrapper implements CommandCallable {
         }
     }
 
-    protected boolean throwEvent(ICommandSender sender, String[] args) throws InvocationCommandException {
+    protected boolean throwEvent(ICommandSender sender, String[] args) {
         return true;
     }
 
@@ -226,7 +225,6 @@ public class MinecraftCommandWrapper implements CommandCallable {
         if (!testPermission(source)) {
             return ImmutableList.of();
         }
-        @SuppressWarnings("unchecked")
         List<String> suggestions = this.command.getTabCompletions(SpongeImpl.getServer(),
                 WrapperICommandSender.of(source), arguments.split(" ", -1), targetPosition == null ? null : VecHelper.toBlockPos(targetPosition));
         if (suggestions == null) {
@@ -235,7 +233,6 @@ public class MinecraftCommandWrapper implements CommandCallable {
         return suggestions;
     }
 
-    @SuppressWarnings("unchecked")
     public List<String> getNames() {
         return ImmutableList.<String>builder().add(this.command.getName()).addAll(this.command.getAliases()).build();
     }

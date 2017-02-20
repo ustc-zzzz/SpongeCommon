@@ -219,9 +219,8 @@ public final class NbtDataUtil {
     public static Optional<NBTTagCompound> getItemCompound(ItemStack itemStack) {
         if (itemStack.hasTagCompound()) {
             return Optional.of(itemStack.getTagCompound());
-        } else {
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 
     /**

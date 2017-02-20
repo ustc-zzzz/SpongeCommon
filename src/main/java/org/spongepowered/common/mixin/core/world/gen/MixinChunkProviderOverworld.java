@@ -259,9 +259,8 @@ public abstract class MixinChunkProviderOverworld implements IChunkProvider, Gen
     private Biome[] onSetBlocksGetBiomesIgnore(BiomeProvider manager, Biome[] biomes, int x, int z, int width, int height) {
         if (this.isVanilla) {
             return biomes;
-        } else {
-            return this.world.getBiomeProvider().getBiomesForGeneration(this.biomesForGeneration, x * 4 - 2, z * 4 - 2, 10, 10);
         }
+        return this.world.getBiomeProvider().getBiomesForGeneration(this.biomesForGeneration, x * 4 - 2, z * 4 - 2, 10, 10);
     }
 
 }

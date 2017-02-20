@@ -268,9 +268,8 @@ public abstract class MixinWorld implements World, IMixinWorld {
     private net.minecraft.world.border.WorldBorder onCreateWorldBorder(WorldProvider provider) {
         if (this.isRemote) {
             return provider.createWorldBorder();
-        } else {
-            return ((IMixinWorldProvider) provider).createServerWorldBorder();
         }
+        return ((IMixinWorldProvider) provider).createServerWorldBorder();
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
@@ -533,9 +532,8 @@ public abstract class MixinWorld implements World, IMixinWorld {
         net.minecraft.tileentity.TileEntity tileEntity = getTileEntity(new BlockPos(x, y, z));
         if (tileEntity == null) {
             return Optional.empty();
-        } else {
-            return Optional.of((TileEntity) tileEntity);
         }
+        return Optional.of((TileEntity) tileEntity);
     }
 
     @Override

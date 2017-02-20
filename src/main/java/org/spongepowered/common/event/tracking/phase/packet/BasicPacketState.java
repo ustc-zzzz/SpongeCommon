@@ -26,13 +26,12 @@ package org.spongepowered.common.event.tracking.phase.packet;
 
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.common.event.tracking.CauseTracker;
-import org.spongepowered.common.event.tracking.IPhaseState;
 import org.spongepowered.common.event.tracking.PhaseContext;
 import org.spongepowered.common.event.tracking.phase.TrackingPhase;
 import org.spongepowered.common.event.tracking.phase.TrackingPhases;
 import org.spongepowered.common.interfaces.block.IMixinBlockEventData;
 
-public class BasicPacketState implements IPhaseState, IPacketState {
+public class BasicPacketState implements IPacketState {
 
     BasicPacketState() {
 

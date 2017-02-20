@@ -42,10 +42,10 @@ import org.spongepowered.common.data.processor.common.AbstractEntitySingleDataPr
 import org.spongepowered.common.data.util.DataConstants;
 import org.spongepowered.common.data.value.immutable.ImmutableSpongeValue;
 import org.spongepowered.common.data.value.mutable.SpongeValue;
-import org.spongepowered.common.entity.SpongeEntityConstants;
 
 import java.util.Optional;
 
+@SuppressWarnings("deprecation")
 public class SkeletonDataProcessor
         extends AbstractEntitySingleDataProcessor<AbstractSkeleton, SkeletonType, Value<SkeletonType>, SkeletonData, ImmutableSkeletonData> {
 
