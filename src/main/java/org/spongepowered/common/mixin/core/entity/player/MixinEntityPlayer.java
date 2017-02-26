@@ -107,7 +107,6 @@ import org.spongepowered.common.util.VecHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -502,9 +501,7 @@ public abstract class MixinEntityPlayer extends MixinEntityLivingBase implements
                                                                 : EnumCreatureAttribute.UNDEFINED;
                 final List<DamageFunction> enchantmentModifierFunctions = DamageEventHandler.createAttackEnchamntmentFunction(this.getHeldItemMainhand(), creatureAttribute, attackStrength);
                 // This is kept for the post-damage event handling
-                final List<DamageModifier> enchantmentModifiers = enchantmentModifierFunctions.stream()
-                        .map(ModifierFunction::getModifier)
-                        .collect(Collectors.toList());
+                final List<DamageModifier> enchantmentModifiers = enchantmentModifierFunctions.stream().map(ModifierFunction::getModifier).collect(Collectors.toList());
 
                 enchantmentDamage = (float) enchantmentModifierFunctions.stream()
                         .map(ModifierFunction::getFunction)
