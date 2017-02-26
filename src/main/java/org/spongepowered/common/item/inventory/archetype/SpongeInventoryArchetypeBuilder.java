@@ -41,6 +41,7 @@ public class SpongeInventoryArchetypeBuilder implements InventoryArchetype.Build
     private List<InventoryArchetype> types = new ArrayList<>();
     private Map<String, InventoryProperty<String, ?>> properties = new HashMap<>();
     private Set<Class<? extends InteractInventoryEvent>> events = new HashSet<>();
+    private InventoryArchetype.ContainerProvider containerProvider;
 
     @Override
     public InventoryArchetype.Builder property(InventoryProperty<String, ?> property) {
@@ -64,7 +65,7 @@ public class SpongeInventoryArchetypeBuilder implements InventoryArchetype.Build
     public InventoryArchetype build(String id, String name) {
         // TODO register archetype
         // TODO events
-        return new CompositeInventoryArchetype(id, name, types, properties);
+        return new CompositeInventoryArchetype(id, name, this.types, this.properties, this.containerProvider);
     }
 
     @Override
@@ -84,4 +85,9 @@ public class SpongeInventoryArchetypeBuilder implements InventoryArchetype.Build
         return this;
     }
 
+    @Override
+    public InventoryArchetype.Builder container(InventoryArchetype.ContainerProvider containerProvider) {
+        this.containerProvider = containerProvider;
+        return this;
+    }
 }

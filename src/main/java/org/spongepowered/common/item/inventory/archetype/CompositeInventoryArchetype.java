@@ -26,12 +26,20 @@ package org.spongepowered.common.item.inventory.archetype;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.entity.player.EntityPlayer;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.inventory.Container;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetype;
 import org.spongepowered.api.item.inventory.InventoryProperty;
+import org.spongepowered.common.item.inventory.custom.CustomContainer;
+import org.spongepowered.common.item.inventory.custom.CustomInventory;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.annotation.Nullable;
 
 public class CompositeInventoryArchetype implements InventoryArchetype {
 
@@ -39,12 +47,14 @@ public class CompositeInventoryArchetype implements InventoryArchetype {
     private final String name;
     private final List<InventoryArchetype> types;
     private final Map<String, InventoryProperty<String, ?>> properties;
+    private InventoryArchetype.ContainerProvider containerProvider;
 
-    public CompositeInventoryArchetype(String id, String name, List<InventoryArchetype> types, Map<String, InventoryProperty<String, ?>> properties) {
+    public CompositeInventoryArchetype(String id, String name, List<InventoryArchetype> types, Map<String, InventoryProperty<String, ?>> properties, @Nullable InventoryArchetype.ContainerProvider containerProvider) {
         this.id = id;
         this.name = name;
         this.types = ImmutableList.copyOf(types);
         this.properties = ImmutableMap.copyOf(properties);
+        this.containerProvider = containerProvider;
     }
 
     @Override
@@ -84,5 +94,13 @@ public class CompositeInventoryArchetype implements InventoryArchetype {
     @Override
     public Map<String, InventoryProperty<String, ?>> getProperties() {
         return this.properties;
+    }
+
+    @Override
+    public Container getContainer(Inventory inventory, Player player) {
+        if (this.containerProvider == null) {
+            return ((Container) new CustomContainer(((EntityPlayer) player), ((CustomInventory) inventory)));
+        }
+        return this.containerProvider.provide(inventory, player);
     }
 }
