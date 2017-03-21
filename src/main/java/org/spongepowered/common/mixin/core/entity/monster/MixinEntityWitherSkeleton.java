@@ -26,9 +26,6 @@ package org.spongepowered.common.mixin.core.entity.monster;
 
 import net.minecraft.entity.monster.EntityWitherSkeleton;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.entity.SkeletonData;
-import org.spongepowered.api.data.type.SkeletonType;
-import org.spongepowered.api.data.type.SkeletonTypes;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.entity.living.monster.WitherSkeleton;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,14 +38,14 @@ public abstract class MixinEntityWitherSkeleton extends MixinAbstractSkeleton im
 
     @Deprecated
     @Override
-    public SkeletonData getSkeletonData() {
-        return new SpongeSkeletonData(SkeletonTypes.WITHER);
+    public org.spongepowered.api.data.manipulator.mutable.entity.SkeletonData getSkeletonData() {
+        return new SpongeSkeletonData(org.spongepowered.api.data.type.SkeletonTypes.WITHER);
     }
 
     @Deprecated
     @Override
-    public Value<SkeletonType> variant() {
-        return new SpongeValue<>(Keys.SKELETON_TYPE, SkeletonTypes.WITHER, SkeletonTypes.WITHER);
+    public Value<org.spongepowered.api.data.type.SkeletonType> variant() {
+        return new SpongeValue<>(Keys.SKELETON_TYPE, org.spongepowered.api.data.type.SkeletonTypes.WITHER, org.spongepowered.api.data.type.SkeletonTypes.WITHER);
     }
 
 }
