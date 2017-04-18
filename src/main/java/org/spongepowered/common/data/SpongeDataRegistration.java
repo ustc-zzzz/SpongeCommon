@@ -33,7 +33,7 @@ import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
 import org.spongepowered.api.data.manipulator.ImmutableDataManipulator;
 import org.spongepowered.api.plugin.PluginContainer;
 
-public final class SpongeDataRegistration<M extends DataManipulator<M, I>, I extends ImmutableDataManipulator<I, M>> implements DataRegistration<M, I> {
+public final class SpongeDataRegistration<M extends DataManipulator<M, I>, I extends ImmutableDataManipulator<I, M>> implements DataRegistration<M, I>, Comparable<SpongeDataRegistration> {
 
 
     private final Class<M> manipulatorClass;
@@ -50,6 +50,11 @@ public final class SpongeDataRegistration<M extends DataManipulator<M, I>, I ext
         this.container = checkNotNull(builder.container, "PluginContainer is null!");
         this.id = this.container.getId() + ":" + checkNotNull(builder.id, "Data ID is null!");
         this.name = checkNotNull(builder.name, "Data name is null!");
+    }
+
+    @Override
+    public int compareTo(SpongeDataRegistration o) {
+        return this.id.compareTo(o.id);
     }
 
     @Override
