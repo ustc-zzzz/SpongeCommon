@@ -101,6 +101,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -241,7 +242,8 @@ public final class ContainerUtil {
     private static Lens<IInventory, ItemStack> generateLens(net.minecraft.inventory.Container container, SlotCollection slots) {
         // Get all inventories viewed in the Container & count slots & retain order
         Map<Optional<IInventory>, List<Slot>> viewed = container.inventorySlots.stream()
-                .collect(Collectors.groupingBy(i -> Optional.ofNullable(i.inventory), LinkedHashMap::new, Collectors.toList()));
+                .collect(Collectors.groupingBy((Function<Slot, Optional<IInventory>>) i -> Optional.ofNullable(i.inventory), LinkedHashMap::new,
+                        Collectors.toList()));
         int index = 0; // Count the index
         List<Lens<IInventory, ItemStack>> lenses = new ArrayList<>();
         for (Map.Entry<Optional<IInventory>, List<Slot>> entry : viewed.entrySet()) {
