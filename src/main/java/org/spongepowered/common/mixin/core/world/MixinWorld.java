@@ -207,7 +207,7 @@ public abstract class MixinWorld implements World, IMixinWorld {
     @Shadow public abstract net.minecraft.world.border.WorldBorder shadow$getWorldBorder();
     @Shadow public abstract EnumDifficulty shadow$getDifficulty();
 
-    @Shadow protected abstract void tickPlayers();
+    @Shadow protected abstract void mth_0826_l(); // @1.12-pre2 tickPlayers
 
     @Shadow public net.minecraft.world.World init() {
         // Should never be overwritten because this is @Shadow'ed
@@ -1152,7 +1152,7 @@ public abstract class MixinWorld implements World, IMixinWorld {
      * @reason Optimizes several blockstate lookups for getting raw light.
      *
      * @param pos The position to get the light for
-     * @param lightType The light type
+     * @param enumSkyBlock The light type
      * @return The raw light
      */
     @Inject(method = "getRawLight", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockState" +
@@ -1430,7 +1430,7 @@ public abstract class MixinWorld implements World, IMixinWorld {
 
         this.unloadedEntityList.clear();
         this.stopEntityRemovalTiming(); // Sponge
-        this.tickPlayers();
+        this.mth_0826_l();
         // this.profiler.endStartSection("regular"); // Sponge - Don't use the profiler
         this.entityActivationCheck();
 
