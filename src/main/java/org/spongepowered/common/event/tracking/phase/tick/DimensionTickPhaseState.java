@@ -91,11 +91,6 @@ class DimensionTickPhaseState extends TickPhaseState {
         Sponge.getCauseStackManager().popCauseFrame(frame);
     }
 
-    @Override
-    public void associateAdditionalBlockChangeCauses(PhaseContext context, Cause.Builder builder) {
-
-    }
-
     /*
     @author - gabizou
     non-javadoc

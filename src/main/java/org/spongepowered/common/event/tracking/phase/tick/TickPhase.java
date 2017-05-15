@@ -100,7 +100,6 @@ public final class TickPhase extends TrackingPhase {
 
     @Override
     public void addNotifierToBlockEvent(IPhaseState phaseState, PhaseContext context, IMixinWorldServer mixinWorld, BlockPos pos, IMixinBlockEventData blockEvent) {
-        ((TickPhaseState) phaseState).associateBlockEventNotifier(context, pos, blockEvent);
     }
 
     @Override

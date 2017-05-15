@@ -380,6 +380,7 @@ public abstract class MixinMinecraftServer implements Server, ConsoleSource, IMi
         if (CauseTracker.ENABLED) {
             causeTracker.switchToPhase(GenerationPhase.State.TERRAIN_GENERATION, PhaseContext.start()
                     .source(worldServer)
+                    .addExtra(InternalNamedCauses.WorldGeneration.WORLD, worldServer)
                     .addCaptures()
                     .complete());
         }
@@ -769,7 +770,7 @@ public abstract class MixinMinecraftServer implements Server, ConsoleSource, IMi
     @Redirect(method = "callFromMainThread", at = @At(value = "INVOKE", target = "Ljava/util/concurrent/Callable;call()Ljava/lang/Object;", remap = false))
     public Object onCall(Callable<?> callable) throws Exception {
         CauseTracker.getInstance().switchToPhase(PluginPhase.State.SCHEDULED_TASK, PhaseContext.start()
-            .add(NamedCause.source(callable))
+            .source(callable)
             .addCaptures()
             .complete()
         );
